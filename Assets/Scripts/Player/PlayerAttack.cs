@@ -26,7 +26,6 @@ public class PlayerAttack : MonoBehaviour
     public bool attack2 = false;
     public bool attack3 = false;
 
-   
 
     [Header("Attack Checks")]
     public bool attackPerformed = false;
@@ -57,9 +56,13 @@ public class PlayerAttack : MonoBehaviour
         attackAnimation3Duration = attackAnimation3.length;
         
     }
+
+
     void Update()
     {
-        if(rb.velocity.magnitude > 0)
+        Debug.Log(rb.velocity.magnitude);
+
+        if (rb.velocity.magnitude > 0.5f)
         {
             animator.SetFloat("ResetAttack", 0.1f);
         }
@@ -67,7 +70,7 @@ public class PlayerAttack : MonoBehaviour
         {
             animator.SetFloat("ResetAttack", Mathf.Abs(currentChainCooldown));
         }
-        
+
         //Verify attack input
         if (UserInput.instance.controls.Player.MainAttack.WasPressedThisFrame() && movController.isGrounded && canAttack)
         {
@@ -193,7 +196,7 @@ public class PlayerAttack : MonoBehaviour
     void AllowMove()
     {
         canMove = true;
-        Debug.Log("Move Allowed");
+        
     }
 
 
@@ -209,7 +212,7 @@ public class PlayerAttack : MonoBehaviour
             {
                 enemy.GetComponent<EnemyHealth>().TakeDamage(playerDamage);
             }
-            Debug.Log("atack" + playerDamage);
+            
         }
         else 
         {
@@ -222,7 +225,6 @@ public class PlayerAttack : MonoBehaviour
                 enemy.GetComponent<EnemyHealth>().TakeDamage(playerDamage + playerDamageFinal);
                 
             }
-            Debug.Log("final atack" + (playerDamage + playerDamageFinal));
         }
         
 
