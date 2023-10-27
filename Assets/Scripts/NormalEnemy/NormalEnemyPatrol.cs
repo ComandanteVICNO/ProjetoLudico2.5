@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -11,11 +13,24 @@ public class NormalEnemyPatrol : MonoBehaviour
     private Rigidbody rb;
     private Animator animator;
     private Transform currentPoint;
+    private Transform currentPosition;
+    public DetectPlayer detectPlayer;
+    private Transform playerTransform;
+    public bool canChacePlayer;
+
+    public enum PlayerDir
+    {
+        Left,
+        Right,
+    }
+
+    private PlayerDir playerDir;
 
     [Header("Values")]
     public float minDistance;
     public float speed;
     public float waitTime;
+
 
     private bool canMove = true;
     void Start()
@@ -23,22 +38,58 @@ public class NormalEnemyPatrol : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         //animator = GetComponent<Animator>();
         // animator.SetBool("isRunning", true);
-        currentPoint = pointB.transform;
+        currentPoint = pointA.transform;
         bool canMove = true;
+        bool canChacePlayer = false;
+        currentPosition = GetComponent<Transform>();
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        Vector3 point = currentPoint.position - transform.position;
+        CheckOutOfBounds();
+        
+
+        if (!detectPlayer.PlayerDectionStatus())
+        {
+            Patrol();
+            
+        }
+        else
+        {
+            CheckPlayerDirection();
+            
+            if(canChacePlayer)
+            {
+                ChacePlayer();
+            }
+            else
+            {
+                Patrol();
+            }
+   
+        }
+        
+        
+
+        
+
+    }
+
+    #region Patrolling
+    private void Patrol()
+    {
+        
         if (currentPoint == pointB.transform && canMove)
         {
             rb.velocity = new Vector3(speed, 0, 0);
+            transform.localScale = new Vector3(-1, 1, 1);
         }
         else if (currentPoint == pointA.transform && canMove)
         {
             rb.velocity = new Vector3(-speed, 0, 0);
+            transform.localScale = new Vector3(1, 1, 1);
         }
         else
         {
@@ -55,7 +106,6 @@ public class NormalEnemyPatrol : MonoBehaviour
         {
             StopMoving();
         }
-
     }
 
     private void StopMoving()
@@ -63,44 +113,83 @@ public class NormalEnemyPatrol : MonoBehaviour
         if (currentPoint == pointB.transform)
         {
             canMove = false;
-            Debug.Log("1");
+            
             rb.velocity = new Vector3(0, 0, 0);
             currentPoint = pointA.transform;
-            Invoke("ContinueMoving", waitTime);
+            Invoke("MoveToNextPoint", waitTime);
 
         }
         else if (currentPoint == pointA.transform)
         {
-            Debug.Log("2");
+            
             canMove = false;
             rb.velocity = new Vector3(0, 0, 0);
             currentPoint = pointB.transform;
 
-            Invoke("ContinueMoving", waitTime);
+            Invoke("MoveToNextPoint", waitTime);
         }
     }
 
-    private void ContinueMoving()
+    private void MoveToNextPoint()
     {
         if (currentPoint == pointB.transform)
         {
             canMove = true;
-            Debug.Log("3");
-            Flip();
+            
+            
             rb.velocity = new Vector3(speed, 0, 0);
         }
         else
         {
             canMove = true;
-            Debug.Log("4");
-            Flip();
+            
+            
             rb.velocity = new Vector3(-speed, 0, 0);
         }
 
 
     }
+    #endregion
+
+    private void CheckPlayerDirection()
+    {
+        Transform playerPos = detectPlayer.playerTransform;
+
+        if (playerPos == null) return;
+
+        else
+        {
+            if(transform.position.x > playerPos.position.x)
+            {
+                transform.localScale = new Vector3(1, 1, 1);
+                playerDir = PlayerDir.Left;
+
+            }
+            else if(transform.position.x < playerPos.position.x)
+            {
+                transform.localScale = new Vector3(-1,1,1);
+                playerDir = PlayerDir.Right;
+            }
+        }
 
 
+    }
+
+    private void ChacePlayer()
+    {
+        if(detectPlayer.playerTransform != null)
+        {
+            if(playerDir == PlayerDir.Left)
+            {
+                rb.velocity = new Vector3(-speed, 0, 0);
+            }
+            else if(playerDir == PlayerDir.Right)
+            {
+                rb.velocity = new Vector3(speed, 0, 0);
+            }
+
+        }
+    }
     private void Flip()
     {
         Vector3 localScale = transform.localScale;
@@ -108,10 +197,21 @@ public class NormalEnemyPatrol : MonoBehaviour
         transform.localScale = localScale;
     }
 
+
+    private void CheckOutOfBounds()
+    {
+        if ((Vector2.Distance(transform.position, pointA.transform.position) < minDistance) || (Vector2.Distance(transform.position, pointB.transform.position) < minDistance))
+        {
+            canChacePlayer = false;
+        }
+        else { canChacePlayer = true; }
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(pointA.transform.position, 0.5f);
 
         Gizmos.DrawWireSphere(pointB.transform.position, 0.5f);
+
     }
 }

@@ -207,7 +207,7 @@ public class PlayerMovController : MonoBehaviour
 
             if (moveDown == -1)
             {
-                Debug.Log("Desdend");
+                
 
                 isJumping = false;
 
@@ -244,7 +244,7 @@ public class PlayerMovController : MonoBehaviour
 
             animator.SetBool("isJumping", true);
 
-            Debug.Log("Jump");
+            
         }
         else
         {

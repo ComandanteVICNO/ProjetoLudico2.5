@@ -60,7 +60,7 @@ public class PlayerAttack : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(rb.velocity.magnitude);
+       
 
         if (rb.velocity.magnitude > 0.5f)
         {

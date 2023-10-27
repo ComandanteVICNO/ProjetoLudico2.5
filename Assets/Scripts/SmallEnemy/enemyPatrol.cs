@@ -63,7 +63,7 @@ public class enemyPatrol : MonoBehaviour
         if (currentPoint == pointB.transform)
         {
             canMove = false;
-            Debug.Log("1");
+
             rb.velocity = new Vector3(0, 0, 0);
             currentPoint = pointA.transform;
             Invoke("ContinueMoving", waitTime);
@@ -71,7 +71,7 @@ public class enemyPatrol : MonoBehaviour
         }
         else if ( currentPoint == pointA.transform) 
         {
-            Debug.Log("2");
+          
             canMove = false;
             rb.velocity = new Vector3(0, 0, 0);
             currentPoint = pointB.transform;
@@ -85,14 +85,14 @@ public class enemyPatrol : MonoBehaviour
         if (currentPoint == pointB.transform)
         {
             canMove = true;
-            Debug.Log("3");
+           
             Flip();
             rb.velocity = new Vector3(speed, 0, 0);
         }
         else
         {
             canMove = true;
-            Debug.Log("4");
+           
             Flip();
             rb.velocity = new Vector3(-speed, 0, 0);
         }
