@@ -243,6 +243,7 @@ GameObject:
   - component: {fileID: 159508328}
   - component: {fileID: 159508329}
   - component: {fileID: 159508332}
+  - component: {fileID: 159508334}
   - component: {fileID: 159508331}
   - component: {fileID: 159508333}
   m_Layer: 3
@@ -515,6 +516,28 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &159508334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 159508323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e7b51884c08a96478a163e4ba304123, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 200
+  currentHealth: 0
+  colorChangeDuration: 0
+  playerSprite: {fileID: 2023718395}
+  damageColor:
+    serializedVersion: 2
+    rgba: 0
+  originalColor:
+    serializedVersion: 2
+    rgba: 0
 --- !u!1 &191348692
 GameObject:
   m_ObjectHideFlags: 0
@@ -2221,6 +2244,126 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4068373912626513877, guid: b914686f4b0e55e48a9c085c8fa54b7d, type: 3}
+--- !u!1 &1967891652
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1967891653}
+  - component: {fileID: 1967891657}
+  - component: {fileID: 1967891656}
+  - component: {fileID: 1967891655}
+  - component: {fileID: 1967891654}
+  m_Layer: 0
+  m_Name: EnemyAttackPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1967891653
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1967891652}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.082, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4271473092367488384}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1967891654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1967891652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09b56ed55dc43694993bbe2b188e88ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPlayerDetected: 0
+  playerTransform: {fileID: 0}
+--- !u!135 &1967891655
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1967891652}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.3
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1967891656
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1967891652}
+  m_Enabled: 0
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1967891657
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1967891652}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &2023718393
 GameObject:
   m_ObjectHideFlags: 0
@@ -2463,10 +2606,6 @@ MonoBehaviour:
   originalColor:
     serializedVersion: 2
     rgba: 0
-  enemyDamaged: 0
-  bloodParticles: {fileID: 6823200998282874702, guid: 8f8fe12323625f5499b2853dd2ad3e58,
-    type: 3}
-  bloodParticlesLocation: {fileID: 7004049188402345870}
 --- !u!23 &203329962322009278
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4879,6 +5018,7 @@ Transform:
   - {fileID: 5967312559764344012}
   - {fileID: 7004049188402345870}
   - {fileID: 604255367}
+  - {fileID: 1967891653}
   m_Father: {fileID: 7780210616190897912}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4340527856504925610
@@ -5525,6 +5665,7 @@ GameObject:
   - component: {fileID: 102854596456593893}
   - component: {fileID: 166890065061578102}
   - component: {fileID: 5587361829254490044}
+  - component: {fileID: 5587361829254490045}
   m_Layer: 7
   m_Name: EnemyCapsule
   m_TagString: Untagged
@@ -5546,11 +5687,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointA: {fileID: 1205882903}
   pointB: {fileID: 1891639599}
-  detectPlayer: {fileID: 604255371}
-  canChacePlayer: 0
+  boxDetectPlayer: {fileID: 604255371}
+  sphereDetectPlayer: {fileID: 1967891654}
   minDistance: 0.5
   speed: 2
   waitTime: 1
+  canChasePlayer: 0
+--- !u!114 &5587361829254490045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5587361829254490043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d69df06d76e3484e8a0b2def497931d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sphereDetectPlayer: {fileID: 1967891654}
+  enemyAttackPoint: {fileID: 1967891653}
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  attackRange: 0.5
+  damage: 20
+  attackCooldown: 2
 --- !u!23 &5598121463220131019
 MeshRenderer:
   m_ObjectHideFlags: 0

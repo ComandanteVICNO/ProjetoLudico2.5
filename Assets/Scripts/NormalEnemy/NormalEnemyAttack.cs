@@ -4,30 +4,70 @@ using UnityEngine;
 
 public class NormalEnemyAttack : MonoBehaviour
 {
-    public float attackCooldown;
-    public float damage;
-    private float cooldownTimer = Mathf.Infinity;
-    public LayerMask player;
+    [Header("References")]
+    public DetectPlayer sphereDetectPlayer;
+    public Transform enemyAttackPoint;
+    public LayerMask playerLayer;
 
+    [Header("Values")]
+    public float attackRange;
+    public float damage;
+    public float attackCooldown;
+    private float originalAttackCooldown;
+
+    private bool canAttack;
+    private bool isPlayerDetected;
+
+    void Start()
+    {
+        originalAttackCooldown = attackCooldown;
+    }
 
     // Update is called once per frame
     void Update()
     {
-        cooldownTimer += Time.deltaTime;
+        AttackCooldown();
+    }
 
-        //attack only when player is in sight?
-        if (PlayerInSight())
+    void Attack()
+    {
+        Collider[] hitPlayer = Physics.OverlapSphere(enemyAttackPoint.position, attackRange, playerLayer);
+
+        foreach (Collider enemy in hitPlayer)
         {
-            if (cooldownTimer >= attackCooldown)
-            {
-                //attack
-            }
+            enemy.GetComponent<PlayerHealth>().TakeDamage(damage);
+
         }
     }
 
-    private bool PlayerInSight()
+    void AttackCooldown()
     {
+        if (sphereDetectPlayer.PlayerDectionStatus())
+        {
+            isPlayerDetected = true;
+        }
+        else
+        {
+            isPlayerDetected = false;
+        }
 
-        return false;
+        if (isPlayerDetected)
+        {
+            attackCooldown -= Time.deltaTime;
+            if(attackCooldown <= 0 && canAttack)
+            {
+                Debug.Log("Attack");
+                Attack();
+
+                canAttack = false;
+            }
+        }
+        else
+        {
+            attackCooldown = originalAttackCooldown;
+
+            canAttack = true;
+        }
+        
     }
 }

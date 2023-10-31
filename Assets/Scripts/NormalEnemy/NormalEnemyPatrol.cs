@@ -14,9 +14,10 @@ public class NormalEnemyPatrol : MonoBehaviour
     private Animator animator;
     private Transform currentPoint;
     private Transform currentPosition;
-    public DetectPlayer detectPlayer;
+    public DetectPlayer boxDetectPlayer;
+    public DetectPlayer sphereDetectPlayer;
     private Transform playerTransform;
-    public bool canChacePlayer;
+
 
     public enum PlayerDir
     {
@@ -30,8 +31,8 @@ public class NormalEnemyPatrol : MonoBehaviour
     public float minDistance;
     public float speed;
     public float waitTime;
-
-
+    [Header("Bool Checks")]
+    public bool canChasePlayer;
     private bool canMove = true;
     void Start()
     {
@@ -49,9 +50,8 @@ public class NormalEnemyPatrol : MonoBehaviour
     {
 
         CheckOutOfBounds();
-        
 
-        if (!detectPlayer.PlayerDectionStatus())
+        if (!boxDetectPlayer.PlayerDectionStatus())
         {
             Patrol();
             
@@ -60,21 +60,15 @@ public class NormalEnemyPatrol : MonoBehaviour
         {
             CheckPlayerDirection();
             
-            if(canChacePlayer)
+            if(canChasePlayer)
             {
-                ChacePlayer();
+                ChasePlayer();
             }
             else
             {
                 Patrol();
             }
-   
         }
-        
-        
-
-        
-
     }
 
     #region Patrolling
@@ -153,7 +147,7 @@ public class NormalEnemyPatrol : MonoBehaviour
 
     private void CheckPlayerDirection()
     {
-        Transform playerPos = detectPlayer.playerTransform;
+        Transform playerPos = boxDetectPlayer.playerTransform;
 
         if (playerPos == null) return;
 
@@ -175,11 +169,15 @@ public class NormalEnemyPatrol : MonoBehaviour
 
     }
 
-    private void ChacePlayer()
+    private void ChasePlayer()
     {
-        if(detectPlayer.playerTransform != null)
+        if(boxDetectPlayer.playerTransform != null)
         {
-            if(playerDir == PlayerDir.Left)
+            if (sphereDetectPlayer.PlayerDectionStatus())
+            {
+                rb.velocity = new Vector3(0, 0, 0);
+            }
+            else if(playerDir == PlayerDir.Left)
             {
                 rb.velocity = new Vector3(-speed, 0, 0);
             }
@@ -187,8 +185,8 @@ public class NormalEnemyPatrol : MonoBehaviour
             {
                 rb.velocity = new Vector3(speed, 0, 0);
             }
-
         }
+
     }
     private void Flip()
     {
@@ -202,10 +200,12 @@ public class NormalEnemyPatrol : MonoBehaviour
     {
         if ((Vector2.Distance(transform.position, pointA.transform.position) < minDistance) || (Vector2.Distance(transform.position, pointB.transform.position) < minDistance))
         {
-            canChacePlayer = false;
+            canChasePlayer = false;
         }
-        else { canChacePlayer = true; }
+        else { canChasePlayer = true; }
     }
+
+    
 
     private void OnDrawGizmos()
     {
