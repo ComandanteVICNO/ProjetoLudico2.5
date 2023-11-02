@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
@@ -210,7 +211,17 @@ public class PlayerAttack : MonoBehaviour
 
             foreach (Collider enemy in hitEnemies)
             {
-                enemy.GetComponent<EnemyHealth>().TakeDamage(playerDamage);
+                if (enemy.GetComponent<EnemyHealth>() != null)
+                {
+                    enemy.GetComponent<EnemyHealth>().TakeDamage(playerDamage);
+                }
+
+                if (enemy.GetComponent<Fracture>() != null)
+                {
+                    enemy.GetComponent<Fracture>().BreakObject();
+                    Debug.Log("break");
+                }
+
             }
             
         }
