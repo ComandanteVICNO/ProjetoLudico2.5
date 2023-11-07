@@ -15,12 +15,13 @@ public class NormalEnemyAttack : MonoBehaviour
     public float attackCooldown;
     private float originalAttackCooldown;
 
-    private bool canAttack;
+    private bool attackPerformed;
     private bool isPlayerDetected;
 
     void Start()
     {
         originalAttackCooldown = attackCooldown;
+        attackCooldown = 0;
     }
 
     // Update is called once per frame
@@ -36,7 +37,7 @@ public class NormalEnemyAttack : MonoBehaviour
         foreach (Collider enemy in hitPlayer)
         {
             enemy.GetComponent<PlayerHealth>().TakeDamage(damage);
-
+            
         }
     }
 
@@ -54,20 +55,20 @@ public class NormalEnemyAttack : MonoBehaviour
         if (isPlayerDetected)
         {
             attackCooldown -= Time.deltaTime;
-            if(attackCooldown <= 0 && canAttack)
+            if(attackCooldown <= 0)
             {
                 Debug.Log("Attack");
                 Attack();
-
-                canAttack = false;
+                
+                attackPerformed = true;
             }
-        }
-        else
-        {
-            attackCooldown = originalAttackCooldown;
-
-            canAttack = true;
-        }
+        }  
         
+        if(attackPerformed)
+        {
+            attackPerformed = false;
+            attackCooldown = originalAttackCooldown;
+        }
+
     }
 }

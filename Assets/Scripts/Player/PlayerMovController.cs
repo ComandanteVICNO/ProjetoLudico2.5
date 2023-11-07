@@ -75,6 +75,7 @@ public class PlayerMovController : MonoBehaviour
 
         Jump(); 
         Animation();
+        FreezeZAxix();
     }
 
     private void FixedUpdate()
@@ -141,6 +142,14 @@ public class PlayerMovController : MonoBehaviour
         
             
 
+    }
+
+    private void FreezeZAxix()
+    {
+        if (transform.localPosition.z < 0)
+        {
+            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0);
+        }
     }
 
     private void Flip()

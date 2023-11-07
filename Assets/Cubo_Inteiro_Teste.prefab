@@ -97,3 +97,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fractured: {fileID: 0}
+  breakForce: 5
+  playerTransform: {fileID: 0}

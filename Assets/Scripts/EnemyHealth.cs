@@ -8,13 +8,15 @@ public class EnemyHealth : MonoBehaviour
     public float maxHealth;
     public float currentHealth;
     public float colorChangeDuration;
+    public float knockBackForce;
     public SpriteRenderer enemySprite;
     public Color32 damageColor;
     public Color32 originalColor;
+    private Rigidbody rb;
 
     void Start()
     {
-       
+        rb = GetComponent<Rigidbody>();
         currentHealth = maxHealth;
         originalColor = enemySprite.color;
         damageColor = Color.red;
@@ -24,7 +26,7 @@ public class EnemyHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ChangeColor();
+        
     }
 
     public void TakeDamage(float damage)
@@ -32,7 +34,7 @@ public class EnemyHealth : MonoBehaviour
         currentHealth -= damage;
 
         StartCoroutine(ChangeColor());
-
+        Knockback();
 
 
         if (currentHealth <= 0) 
@@ -51,5 +53,11 @@ public class EnemyHealth : MonoBehaviour
 
     }
 
+    private void Knockback()
+    {
+        Vector3 oppositeDirection = transform.forward;
+
+        rb.AddForce(oppositeDirection * knockBackForce, ForceMode.Impulse);
+    }
 
 }

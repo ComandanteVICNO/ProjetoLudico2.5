@@ -33,6 +33,7 @@ public class NormalEnemyPatrol : MonoBehaviour
     public float waitTime;
     [Header("Bool Checks")]
     public bool canChasePlayer;
+    public bool wasAttacked;
     private bool canMove = true;
     void Start()
     {
@@ -40,15 +41,13 @@ public class NormalEnemyPatrol : MonoBehaviour
         //animator = GetComponent<Animator>();
         // animator.SetBool("isRunning", true);
         currentPoint = pointA.transform;
-        bool canMove = true;
-        bool canChacePlayer = false;
         currentPosition = GetComponent<Transform>();
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        FreezeZAxix();
         CheckOutOfBounds();
 
         if (!boxDetectPlayer.PlayerDectionStatus())
@@ -204,8 +203,14 @@ public class NormalEnemyPatrol : MonoBehaviour
         }
         else { canChasePlayer = true; }
     }
-
     
+    private void FreezeZAxix()
+    {
+        if(transform.localPosition.z < 0)
+        {
+            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0);
+        }
+    }
 
     private void OnDrawGizmos()
     {
