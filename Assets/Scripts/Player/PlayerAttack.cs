@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 
 public class PlayerAttack : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class PlayerAttack : MonoBehaviour
     public float attackRange = 0.5f;
     public float playerDamage;
     public float playerDamageFinal;
+    public float knockBackAmount;
 
     [Header("Attack and Animation Cooldown")]
     public float originalChainCooldown;
@@ -213,7 +215,17 @@ public class PlayerAttack : MonoBehaviour
             {
                 if (enemy.GetComponent<EnemyHealth>() != null)
                 {
-                    enemy.GetComponent<EnemyHealth>().TakeDamage(playerDamage);
+                    enemy.GetComponent<EnemyHealth>().TakeDamage(playerDamage); 
+                }
+
+                if(enemy.GetComponent<NormalEnemyPatrol>() != null)
+                {
+                    enemy.GetComponent<NormalEnemyPatrol>().DoKnockBack(knockBackAmount, transform);
+                }
+
+                if(enemy.GetComponent<enemyPatrol>() != null)
+                {
+                    enemy.GetComponent<enemyPatrol>().DoKnockBack(knockBackAmount, transform);
                 }
 
                 if (enemy.GetComponent<Fracture>() != null)

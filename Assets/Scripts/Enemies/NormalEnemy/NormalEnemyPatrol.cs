@@ -31,10 +31,12 @@ public class NormalEnemyPatrol : MonoBehaviour
     public float minDistance;
     public float speed;
     public float waitTime;
+    public float knockbackTime;
     [Header("Bool Checks")]
     public bool canChasePlayer;
     public bool wasAttacked;
     private bool canMove = true;
+    private bool tookKnockback = false;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -50,24 +52,29 @@ public class NormalEnemyPatrol : MonoBehaviour
         FreezeZAxix();
         CheckOutOfBounds();
 
-        if (!boxDetectPlayer.PlayerDectionStatus())
+        if (!tookKnockback)
         {
-            Patrol();
-            
-        }
-        else
-        {
-            CheckPlayerDirection();
-            
-            if(canChasePlayer)
+            if (!boxDetectPlayer.PlayerDectionStatus())
             {
-                ChasePlayer();
+                Patrol();
+
             }
             else
             {
-                Patrol();
+                CheckPlayerDirection();
+
+                if (canChasePlayer)
+                {
+                    ChasePlayer();
+                }
+                else
+                {
+                    Patrol();
+                }
             }
         }
+
+        
     }
 
     #region Patrolling
@@ -144,6 +151,20 @@ public class NormalEnemyPatrol : MonoBehaviour
     }
     #endregion
 
+    public void DoKnockBack(float knockbackForce, Transform playerTransform)
+    {
+        tookKnockback = true;
+        Vector3 direction = (transform.position - playerTransform.position).normalized;
+        rb.AddForce(direction * knockbackForce, ForceMode.Impulse);
+        Debug.Log(knockbackForce);
+        Debug.Log(playerTransform);
+        Invoke("ResetKnockback", knockbackTime);
+    }
+
+    public void ResetKnockback()
+    {
+        tookKnockback = false;
+    }
     private void CheckPlayerDirection()
     {
         Transform playerPos = boxDetectPlayer.playerTransform;

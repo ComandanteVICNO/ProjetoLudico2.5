@@ -34,7 +34,6 @@ public class EnemyHealth : MonoBehaviour
         currentHealth -= damage;
 
         StartCoroutine(ChangeColor());
-        Knockback();
 
 
         if (currentHealth <= 0) 
@@ -53,11 +52,5 @@ public class EnemyHealth : MonoBehaviour
 
     }
 
-    private void Knockback()
-    {
-        Vector3 oppositeDirection = transform.forward;
-
-        rb.AddForce(oppositeDirection * knockBackForce, ForceMode.Impulse);
-    }
 
 }

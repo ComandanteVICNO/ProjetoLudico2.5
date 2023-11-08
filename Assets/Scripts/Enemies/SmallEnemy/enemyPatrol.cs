@@ -16,7 +16,10 @@ public class enemyPatrol : MonoBehaviour
     public float minDistance;
     public float speed;
     public float waitTime;
+    public float knockbackTime;
 
+    [Header("Checks")]
+    public bool tookKnockback = false;
     private bool canMove = true;
     void Start()
     {
@@ -31,29 +34,32 @@ public class enemyPatrol : MonoBehaviour
     void Update()
     {
         
-        Vector3 point = currentPoint.position - transform.position;
-        if(currentPoint == pointB.transform && canMove)
+        if(!tookKnockback)
         {
-            rb.velocity = new Vector3(speed, 0, 0);
-        }
-        else if(currentPoint == pointA.transform && canMove)
-        {
-            rb.velocity = new Vector3(-speed, 0, 0);
-        }
-        else
-        {
-            rb.velocity = new Vector3(0, 0, 0);
-        }
+            Vector3 point = currentPoint.position - transform.position;
+            if (currentPoint == pointB.transform && canMove)
+            {
+                rb.velocity = new Vector3(speed, 0, 0);
+            }
+            else if (currentPoint == pointA.transform && canMove)
+            {
+                rb.velocity = new Vector3(-speed, 0, 0);
+            }
+            else
+            {
+                rb.velocity = new Vector3(0, 0, 0);
+            }
 
-        if (Vector2.Distance(transform.position, currentPoint.position) < minDistance && currentPoint == pointB.transform)
-        {
+            if (Vector2.Distance(transform.position, currentPoint.position) < minDistance && currentPoint == pointB.transform)
+            {
 
-            StopMoving();
-        }
+                StopMoving();
+            }
 
-        if (Vector2.Distance(transform.position, currentPoint.position) < minDistance && currentPoint == pointA.transform)
-        {
-            StopMoving();
+            if (Vector2.Distance(transform.position, currentPoint.position) < minDistance && currentPoint == pointA.transform)
+            {
+                StopMoving();
+            }
         }
         
     }
@@ -106,6 +112,21 @@ public class enemyPatrol : MonoBehaviour
         Vector3 localScale = transform.localScale;
         localScale.x *= -1;
         transform.localScale = localScale;
+    }
+
+    public void DoKnockBack(float knockbackForce, Transform playerTransform)
+    {
+        tookKnockback = true;
+        Vector3 direction = (transform.position - playerTransform.position).normalized;
+        rb.AddForce(direction * knockbackForce, ForceMode.Impulse);
+        Debug.Log(knockbackForce);
+        Debug.Log(playerTransform);
+        Invoke("ResetKnockback", knockbackTime);
+    }
+
+    public void ResetKnockback()
+    {
+        tookKnockback = false;
     }
 
     private void OnDrawGizmos()
