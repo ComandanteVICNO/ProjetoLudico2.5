@@ -220,7 +220,7 @@ public class PlayerAttack : MonoBehaviour
 
                 if(enemy.GetComponent<NormalEnemyPatrol>() != null)
                 {
-                    enemy.GetComponent<NormalEnemyPatrol>().DoKnockBack(knockBackAmount, transform);
+                    enemy.GetComponent<NormalEnemyPatrol>().DoKnockback(knockBackAmount, transform);
                 }
 
                 if(enemy.GetComponent<enemyPatrol>() != null)

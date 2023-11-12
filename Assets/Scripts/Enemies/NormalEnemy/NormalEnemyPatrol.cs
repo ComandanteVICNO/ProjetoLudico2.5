@@ -74,13 +74,13 @@ public class NormalEnemyPatrol : MonoBehaviour
             }
         }
 
-        
+
     }
 
     #region Patrolling
     private void Patrol()
     {
-        
+
         if (currentPoint == pointB.transform && canMove)
         {
             rb.velocity = new Vector3(speed, 0, 0);
@@ -113,7 +113,7 @@ public class NormalEnemyPatrol : MonoBehaviour
         if (currentPoint == pointB.transform)
         {
             canMove = false;
-            
+
             rb.velocity = new Vector3(0, 0, 0);
             currentPoint = pointA.transform;
             Invoke("MoveToNextPoint", waitTime);
@@ -121,7 +121,7 @@ public class NormalEnemyPatrol : MonoBehaviour
         }
         else if (currentPoint == pointA.transform)
         {
-            
+
             canMove = false;
             rb.velocity = new Vector3(0, 0, 0);
             currentPoint = pointB.transform;
@@ -135,15 +135,15 @@ public class NormalEnemyPatrol : MonoBehaviour
         if (currentPoint == pointB.transform)
         {
             canMove = true;
-            
-            
+
+
             rb.velocity = new Vector3(speed, 0, 0);
         }
         else
         {
             canMove = true;
-            
-            
+
+
             rb.velocity = new Vector3(-speed, 0, 0);
         }
 
@@ -151,7 +151,7 @@ public class NormalEnemyPatrol : MonoBehaviour
     }
     #endregion
 
-    public void DoKnockBack(float knockbackForce, Transform playerTransform)
+    public void DoKnockback(float knockbackForce, Transform playerTransform)
     {
         tookKnockback = true;
         Vector3 direction = (transform.position - playerTransform.position).normalized;
@@ -173,15 +173,15 @@ public class NormalEnemyPatrol : MonoBehaviour
 
         else
         {
-            if(transform.position.x > playerPos.position.x)
+            if (transform.position.x > playerPos.position.x)
             {
                 transform.localScale = new Vector3(1, 1, 1);
                 playerDir = PlayerDir.Left;
 
             }
-            else if(transform.position.x < playerPos.position.x)
+            else if (transform.position.x < playerPos.position.x)
             {
-                transform.localScale = new Vector3(-1,1,1);
+                transform.localScale = new Vector3(-1, 1, 1);
                 playerDir = PlayerDir.Right;
             }
         }
@@ -191,17 +191,17 @@ public class NormalEnemyPatrol : MonoBehaviour
 
     private void ChasePlayer()
     {
-        if(boxDetectPlayer.playerTransform != null)
+        if (boxDetectPlayer.playerTransform != null)
         {
             if (sphereDetectPlayer.PlayerDectionStatus())
             {
                 rb.velocity = new Vector3(0, 0, 0);
             }
-            else if(playerDir == PlayerDir.Left)
+            else if (playerDir == PlayerDir.Left)
             {
                 rb.velocity = new Vector3(-speed, 0, 0);
             }
-            else if(playerDir == PlayerDir.Right)
+            else if (playerDir == PlayerDir.Right)
             {
                 rb.velocity = new Vector3(speed, 0, 0);
             }
@@ -224,10 +224,10 @@ public class NormalEnemyPatrol : MonoBehaviour
         }
         else { canChasePlayer = true; }
     }
-    
+
     private void FreezeZAxix()
     {
-        if(transform.localPosition.z < 0)
+        if (transform.localPosition.z < 0)
         {
             transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0);
         }

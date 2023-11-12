@@ -9,6 +9,7 @@ public class UserInput : MonoBehaviour
     [HideInInspector] public PlayerInputs controls;
     [HideInInspector] public Vector2 moveInput;
     [HideInInspector] public bool mainAttackKey;
+    [HideInInspector] public PlayerInputs interact;
 
     private void Awake()
     {
