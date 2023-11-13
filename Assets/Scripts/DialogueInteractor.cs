@@ -11,6 +11,7 @@ public class DialogueInteractor : MonoBehaviour
     public TMP_Text hintText;
     public TMP_Text dialogueText;
     private int currentIndex = 0;
+    public DialogueWriter writer;
     
 
     bool firstMessageRead;
@@ -18,8 +19,9 @@ public class DialogueInteractor : MonoBehaviour
 
     private void Awake()
     {
-        dialogueText = DialogueWriter.instance.dialogueText;
-        DialogueWriter.instance.HideDialogue();
+        writer = FindObjectOfType<DialogueWriter>();
+        dialogueText = writer.dialogueText;
+        writer.HideDialogue();
         HideHint();
         firstMessageRead = false;
     }
@@ -93,11 +95,11 @@ public class DialogueInteractor : MonoBehaviour
 
     void ShowNextMessage()
     {
-        // Increment the index and show the next message
+        
         currentIndex++;
         ShowMessageAtIndex(currentIndex);
 
-        // If all messages are displayed, you may want to handle this event (e.g., close the UI)
+        
         if (currentIndex >= dialogue.Length)
         {
             EndDialog();

@@ -39,13 +39,13 @@ public class DialogueWriter : MonoBehaviour
     }
     public void ShowDialogue()
     {
-        gameObject.SetActive(true);
+        UI.SetActive(true);
         
     }
 
     public void HideDialogue()
     {
-        gameObject.SetActive(false);
+        UI.SetActive(false);
         
     }
 
