@@ -5,7 +5,7 @@ using UnityEngine;
 public class NormalEnemyAttack : MonoBehaviour
 {
     [Header("References")]
-    public DetectPlayer sphereDetectPlayer;
+    public AttackDetectPlayer sphereDetectPlayer;
     public Transform enemyAttackPoint;
     public LayerMask playerLayer;
 

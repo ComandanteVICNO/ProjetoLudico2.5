@@ -218,16 +218,6 @@ public class PlayerAttack : MonoBehaviour
                     enemy.GetComponent<EnemyHealth>().TakeDamage(playerDamage); 
                 }
 
-                if(enemy.GetComponent<NormalEnemyPatrol>() != null)
-                {
-                    enemy.GetComponent<NormalEnemyPatrol>().DoKnockback(knockBackAmount, transform);
-                }
-
-                if(enemy.GetComponent<enemyPatrol>() != null)
-                {
-                    enemy.GetComponent<enemyPatrol>().DoKnockBack(knockBackAmount, transform);
-                }
-
                 if (enemy.GetComponent<Fracture>() != null)
                 {
                     enemy.GetComponent<Fracture>().BreakObject();

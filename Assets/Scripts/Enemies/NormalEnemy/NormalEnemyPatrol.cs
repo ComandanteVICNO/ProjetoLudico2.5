@@ -14,8 +14,8 @@ public class NormalEnemyPatrol : MonoBehaviour
     private Animator animator;
     private Transform currentPoint;
     private Transform currentPosition;
-    public DetectPlayer boxDetectPlayer;
-    public DetectPlayer sphereDetectPlayer;
+    public ChaseDetectPlayer boxDetectPlayer;
+    public AttackDetectPlayer sphereDetectPlayer;
     private Transform playerTransform;
 
 

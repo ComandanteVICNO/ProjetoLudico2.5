@@ -13,6 +13,7 @@ public class EnemyHealth : MonoBehaviour
     public Color32 damageColor;
     public Color32 originalColor;
     private Rigidbody rb;
+    public bool wasAttacked;
 
     void Start()
     {
@@ -20,7 +21,7 @@ public class EnemyHealth : MonoBehaviour
         currentHealth = maxHealth;
         originalColor = enemySprite.color;
         damageColor = Color.red;
-        
+        wasAttacked = false;
     }
 
     // Update is called once per frame
@@ -32,7 +33,7 @@ public class EnemyHealth : MonoBehaviour
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
-
+        wasAttacked = true;
         StartCoroutine(ChangeColor());
 
 

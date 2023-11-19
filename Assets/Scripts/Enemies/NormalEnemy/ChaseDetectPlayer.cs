@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DetectPlayer : MonoBehaviour
+public class ChaseDetectPlayer : MonoBehaviour
 {
     public bool isPlayerDetected;
     public Transform playerTransform;
