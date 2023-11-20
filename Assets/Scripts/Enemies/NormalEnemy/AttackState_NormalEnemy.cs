@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class AttackState : LogicMachineBehaviour<NormalEnemyLogicManager>
+public class AttackState_NormalEnemy : LogicMachineBehaviour<NormalEnemyLogicManager>
 {
     bool canAttack;
     
@@ -29,7 +29,7 @@ public class AttackState : LogicMachineBehaviour<NormalEnemyLogicManager>
         }
         if (manager.enemyHealth.wasAttacked)
         {
-            logicAnimator.SetBool("isStunned", true);
+            logicAnimator.SetBool("wasAttacked", true);
         }
 
 
@@ -52,13 +52,13 @@ public class AttackState : LogicMachineBehaviour<NormalEnemyLogicManager>
         canAttack = false;
 
         //Do attack func here:
-        manager.playerHealth.TakeDamage(manager.damageValue);
 
 
         float attackCooldown = manager.attackCooldown;
         await Task.Delay(TimeSpan.FromSeconds(attackCooldown));
-
         if (!active) return;
+        manager.playerHealth.TakeDamage(manager.damageValue);
+
         canAttack = true;
 
     }

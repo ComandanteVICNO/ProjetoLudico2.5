@@ -11,9 +11,11 @@ public class EnemyHealth : MonoBehaviour
     public float knockBackForce;
     public SpriteRenderer enemySprite;
     public Color32 damageColor;
+    public Color32 stunnedColor;
     public Color32 originalColor;
     private Rigidbody rb;
     public bool wasAttacked;
+    public bool isStunned;
 
     void Start()
     {
@@ -21,6 +23,7 @@ public class EnemyHealth : MonoBehaviour
         currentHealth = maxHealth;
         originalColor = enemySprite.color;
         damageColor = Color.red;
+        stunnedColor = Color.black;
         wasAttacked = false;
     }
 
@@ -34,7 +37,7 @@ public class EnemyHealth : MonoBehaviour
     {
         currentHealth -= damage;
         wasAttacked = true;
-        StartCoroutine(ChangeColor());
+        StartCoroutine(ChangeColor(damageColor));
 
 
         if (currentHealth <= 0) 
@@ -43,15 +46,31 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
-    IEnumerator ChangeColor()
+    public void TakeStunnedDamage(float damage)
     {
-        enemySprite.color = damageColor;
+        currentHealth -= damage;
+        isStunned = true;
+        wasAttacked = true;
+        StartCoroutine(ChangeColor(stunnedColor));
+
+
+        if (currentHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    IEnumerator ChangeColor(Color32 Color)
+    {
+        enemySprite.color = Color;
 
         yield return new WaitForSeconds(colorChangeDuration);
 
         enemySprite.color = originalColor;
 
     }
+
+    
 
 
 }

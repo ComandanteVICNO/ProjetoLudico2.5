@@ -16,6 +16,7 @@ public class PlayerAttack : MonoBehaviour
     [Header("Player Damage & Range")]
     public float attackRange = 0.5f;
     public float playerDamage;
+    public float playerStunningDamage;
     public float playerDamageFinal;
     public float knockBackAmount;
 
@@ -81,6 +82,11 @@ public class PlayerAttack : MonoBehaviour
             attackPerformed = true;
             canAttack = false;
             canMove=false;
+        }
+
+        if(UserInput.instance.controls.Player.StunAttack.WasPerformedThisFrame() && movController.isGrounded && canAttack)
+        {
+            StunnedAttack();
 
         }
 
@@ -241,6 +247,27 @@ public class PlayerAttack : MonoBehaviour
         }
         
 
+    }
+
+    public void StunnedAttack()
+    {
+        Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRange, enemyLayers);
+        Debug.Log("Did stun attack");
+        foreach (Collider enemy in hitEnemies)
+        {
+            if (enemy.GetComponent<EnemyHealth>() != null)
+            {
+                Debug.Log("enemy was stunned");
+                enemy.GetComponent<EnemyHealth>().TakeStunnedDamage(playerStunningDamage);
+            }
+
+            if (enemy.GetComponent<Fracture>() != null)
+            {
+                enemy.GetComponent<Fracture>().BreakObject();
+                Debug.Log("break");
+            }
+
+        }
     }
 
     private void OnDrawGizmos()

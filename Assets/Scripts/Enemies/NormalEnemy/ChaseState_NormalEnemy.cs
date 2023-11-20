@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static NormalEnemyPatrol;
 
-public class ChaseState : LogicMachineBehaviour<NormalEnemyLogicManager>
+public class ChaseState_NormalEnemy : LogicMachineBehaviour<NormalEnemyLogicManager>
 {
 
     Transform playerTransform;
@@ -42,7 +42,7 @@ public class ChaseState : LogicMachineBehaviour<NormalEnemyLogicManager>
         }
         if (manager.enemyHealth.wasAttacked)
         {
-            logicAnimator.SetBool("isStunned", true);
+            logicAnimator.SetBool("wasAttacked", true);
         }
 
 

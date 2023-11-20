@@ -37,6 +37,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
+                    ""name"": ""StunAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""ae971eda-026d-4274-a19b-bb66f964984d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
                     ""name"": ""MainAttack"",
                     ""type"": ""Button"",
                     ""id"": ""9d679b97-68e0-47fd-aa22-11e8f5d30372"",
@@ -284,6 +293,28 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""54ed8fcb-1082-4deb-a6b9-278f7f67132e"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""StunAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""46572e83-4c37-4431-a4e7-1e9e77e5431a"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""StunAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -354,6 +385,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
+        m_Player_StunAttack = m_Player.FindAction("StunAttack", throwIfNotFound: true);
         m_Player_MainAttack = m_Player.FindAction("MainAttack", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
@@ -419,6 +451,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Move;
+    private readonly InputAction m_Player_StunAttack;
     private readonly InputAction m_Player_MainAttack;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Interact;
@@ -427,6 +460,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         private @PlayerInputs m_Wrapper;
         public PlayerActions(@PlayerInputs wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
+        public InputAction @StunAttack => m_Wrapper.m_Player_StunAttack;
         public InputAction @MainAttack => m_Wrapper.m_Player_MainAttack;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
@@ -442,6 +476,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Move.started += instance.OnMove;
             @Move.performed += instance.OnMove;
             @Move.canceled += instance.OnMove;
+            @StunAttack.started += instance.OnStunAttack;
+            @StunAttack.performed += instance.OnStunAttack;
+            @StunAttack.canceled += instance.OnStunAttack;
             @MainAttack.started += instance.OnMainAttack;
             @MainAttack.performed += instance.OnMainAttack;
             @MainAttack.canceled += instance.OnMainAttack;
@@ -458,6 +495,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Move.started -= instance.OnMove;
             @Move.performed -= instance.OnMove;
             @Move.canceled -= instance.OnMove;
+            @StunAttack.started -= instance.OnStunAttack;
+            @StunAttack.performed -= instance.OnStunAttack;
+            @StunAttack.canceled -= instance.OnStunAttack;
             @MainAttack.started -= instance.OnMainAttack;
             @MainAttack.performed -= instance.OnMainAttack;
             @MainAttack.canceled -= instance.OnMainAttack;
@@ -532,6 +572,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     public interface IPlayerActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnStunAttack(InputAction.CallbackContext context);
         void OnMainAttack(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);

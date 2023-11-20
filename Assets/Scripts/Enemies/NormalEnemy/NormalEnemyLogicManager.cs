@@ -23,6 +23,7 @@ public class NormalEnemyLogicManager : LogicMachineManager
     public float attackCooldown;
     public float damageValue;
     public float timeStunned;
+    public float timeknockback;
     public float knockbackForce;
 
 

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class PatrolState : LogicMachineBehaviour<NormalEnemyLogicManager>
+public class PatrolState_NormalEnemy : LogicMachineBehaviour<NormalEnemyLogicManager>
 {
     bool canMove;
     bool waiting;
@@ -27,7 +27,7 @@ public class PatrolState : LogicMachineBehaviour<NormalEnemyLogicManager>
     {
         if (manager.enemyHealth.wasAttacked)
         {
-            logicAnimator.SetBool("isStunned", true);
+            logicAnimator.SetBool("wasAttacked", true);
         }
 
         if (manager.chaseHitbox.isPlayerDetected)

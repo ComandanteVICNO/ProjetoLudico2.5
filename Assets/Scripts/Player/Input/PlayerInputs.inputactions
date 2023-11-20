@@ -15,6 +15,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "StunAttack",
+                    "type": "Button",
+                    "id": "ae971eda-026d-4274-a19b-bb66f964984d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "MainAttack",
                     "type": "Button",
                     "id": "9d679b97-68e0-47fd-aa22-11e8f5d30372",
@@ -260,6 +269,28 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "54ed8fcb-1082-4deb-a6b9-278f7f67132e",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "StunAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "46572e83-4c37-4431-a4e7-1e9e77e5431a",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "StunAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
