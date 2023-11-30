@@ -17,6 +17,8 @@ public class NormalEnemyLogicManager : LogicMachineManager
     public EnemyHealth enemyHealth;
 
     [Header("Values")]
+    public float minWaitTime;
+    public float maxWaitTime;
     public float patrolSpeed;
     public float chaseSpeed;
     public float minDistanceToPoint;
@@ -25,6 +27,7 @@ public class NormalEnemyLogicManager : LogicMachineManager
     public float timeStunned;
     public float timeknockback;
     public float knockbackForce;
+    
 
 
     public override void OnAwake()

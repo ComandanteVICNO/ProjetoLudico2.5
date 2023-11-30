@@ -10,12 +10,13 @@ public class PatrolState_NormalEnemy : LogicMachineBehaviour<NormalEnemyLogicMan
     bool canMove;
     bool waiting;
     Transform currentPoint;
-    public Vector2 waitTime = new Vector2(1, 3);
+    public Vector2 waitTime;
 
     public override void OnAwake()
     {
         canMove = true;
         waiting = false;
+        waitTime = new Vector2(manager.minWaitTime, manager.maxWaitTime);
     }
 
     public override void OnEnter()

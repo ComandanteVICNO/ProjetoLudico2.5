@@ -7,6 +7,9 @@ using UnityEngine;
 public class AttackState_NormalEnemy : LogicMachineBehaviour<NormalEnemyLogicManager>
 {
     bool canAttack;
+    bool isAttacking;
+    public float originalAttackCooldown;
+    public float currentAttackCooldownM;
     
     public override void OnAwake()
     {
@@ -15,23 +18,29 @@ public class AttackState_NormalEnemy : LogicMachineBehaviour<NormalEnemyLogicMan
 
     public override void OnEnter()
     {
+        originalAttackCooldown = manager.attackCooldown;
+        currentAttackCooldownM = originalAttackCooldown;
         canAttack = true;
+        isAttacking = false;
     }
     public override void OnUpdate()
     {
-        if (!manager.attackHitbox.isPlayerDetected)
+        if (!isAttacking)
         {
-            logicAnimator.SetBool("canAttackPlayer", false);
+            if (!manager.attackHitbox.isPlayerDetected)
+            {
+                logicAnimator.SetBool("canAttackPlayer", false);
+            }
+            if (manager.chaseHitbox.isPlayerDetected)
+            {
+                logicAnimator.SetBool("canChasePlayer", true);
+            }
         }
-        if (manager.chaseHitbox.isPlayerDetected)
-        {
-            logicAnimator.SetBool("canChasePlayer", true);
-        }
+
         if (manager.enemyHealth.wasAttacked)
         {
             logicAnimator.SetBool("wasAttacked", true);
         }
-
 
         StopMovement();
         if (canAttack)
@@ -47,20 +56,23 @@ public class AttackState_NormalEnemy : LogicMachineBehaviour<NormalEnemyLogicMan
         logicAnimator.SetBool("canAttackPlayer", false);
     }
 
-    async void DoAttack()
+    
+    void DoAttack()
     {
-        canAttack = false;
-
-        //Do attack func here:
-
-
-        float attackCooldown = manager.attackCooldown;
-        await Task.Delay(TimeSpan.FromSeconds(attackCooldown));
-        if (!active) return;
-        manager.playerHealth.TakeDamage(manager.damageValue);
-
-        canAttack = true;
-
+        if(canAttack)
+        {
+            isAttacking = true;
+            currentAttackCooldownM -= Time.deltaTime;
+            if(currentAttackCooldownM <= 0)
+            {
+                if (manager.attackHitbox.isPlayerDetected)
+                {
+                    manager.playerHealth.TakeDamage(manager.damageValue);
+                }
+                currentAttackCooldownM = originalAttackCooldown;
+                isAttacking = false;
+            }
+        }
     }
 
 
