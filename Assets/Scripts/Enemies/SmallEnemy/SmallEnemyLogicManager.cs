@@ -16,6 +16,10 @@ public class SmallEnemyLogicManager : LogicMachineManager
     public EnemyHealth enemyHealth;
     public PlayerHealth playerHealth;
 
+    [Header("Raycast")]
+    public float RaycastDistance;
+    public LayerMask playerLayer;
+
     [Header("Patrol Values")]
     public float minWaitTime;
     public float maxWaitTime;
@@ -65,7 +69,32 @@ public class SmallEnemyLogicManager : LogicMachineManager
             directionToPlayer = attackPlayerTransform.position - transform.position;
             directionToPlayer = new Vector3(directionToPlayer.x, 0, directionToPlayer.z);
         }
+
+        CheckIfInLineOfPlayer();
+        Debug.Log(CheckIfInLineOfPlayer());
     }
 
+    public bool CheckIfInLineOfPlayer()
+    {
+        Ray ray = new Ray(transform.position, playerTransform.position);
+        RaycastHit hit;
+
+        if(Physics.Raycast(ray,out hit, Mathf.Infinity, playerLayer))
+        {
+            if (hit.collider.CompareTag("Player"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+        
+    }
 
 }
