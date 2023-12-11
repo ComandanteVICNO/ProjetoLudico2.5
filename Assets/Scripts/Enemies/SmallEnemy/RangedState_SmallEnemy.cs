@@ -33,6 +33,7 @@ public class RangedState_SmallEnemy : LogicMachineBehaviour<SmallEnemyLogicManag
             LookAtPlayer();
             if (canLaunch)
             {
+                Debug.Log("can lanche");
                 FireProjectileCooldown();
             }
         }
@@ -125,14 +126,15 @@ public class RangedState_SmallEnemy : LogicMachineBehaviour<SmallEnemyLogicManag
 
         Vector3 normalizedPlayerDir = playerDir.normalized;
 
-        // Calculate the angle in degrees
+        
         float angle = Mathf.Atan2(normalizedPlayerDir.y, normalizedPlayerDir.x) * Mathf.Rad2Deg;
 
-        // Apply the rotation to the projectile only on the z-axis
+        
         projectile.transform.rotation = Quaternion.Euler(0f, 0f, angle);
 
-        // Apply force with a constant magnitude
         projectileRb.AddForce(normalizedPlayerDir * manager.projectileForce, ForceMode.Impulse);
+
+        Debug.Log("Lanchado");
     }
 
 }

@@ -53,13 +53,13 @@ public class SmallEnemyLogicManager : LogicMachineManager
         enemyHealth = GetComponent<EnemyHealth>();
         playerHealth = FindAnyObjectByType<PlayerHealth>();
         playerTransform = playerHealth.transform;
-        projectile = GameObject.FindGameObjectWithTag("SmallEnemyProjectile");
+        
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        projectile = GameObject.FindGameObjectWithTag("SmallEnemyProjectile");
+        
     }
 
     // Update is called once per frame
@@ -75,7 +75,7 @@ public class SmallEnemyLogicManager : LogicMachineManager
         }
 
         CheckIfInLineOfPlayer();
-        Debug.Log(CheckIfInLineOfPlayer());
+        
     }
 
     public bool CheckIfInLineOfPlayer()

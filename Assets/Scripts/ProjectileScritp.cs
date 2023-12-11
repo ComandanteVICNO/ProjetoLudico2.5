@@ -11,16 +11,30 @@ public class ProjectileScritp : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        playerHealth = other.gameObject.GetComponent<PlayerHealth>();
-
-        if (playerHealth != null)
+        if (other.CompareTag("Enemy"))
         {
-            playerHealth.TakeDamage(damage);
+            return;
         }
 
-        Destroy(projectile);
-    }
+        if (other.CompareTag("Player"))
+        {
+            playerHealth = other.gameObject.GetComponent<PlayerHealth>();
 
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage(damage);
+            }
+        }
+        else
+        {
+            Destroy(projectile);
+        }
+
+       
+
+
+    }
+    
 
 
 }
