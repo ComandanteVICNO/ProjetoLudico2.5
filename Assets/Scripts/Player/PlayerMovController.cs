@@ -10,6 +10,7 @@ public class PlayerMovController : MonoBehaviour
     private CapsuleCollider playerCapsule;
     private BoxCollider groundBox;
     public PlayerAttack playerAttack;
+    public Transform playerTransform;
 
     [Header("Movement")]
     public float acceleration;
@@ -18,18 +19,21 @@ public class PlayerMovController : MonoBehaviour
     float targetVelocity;
     private float currentSpeed = 0f;
     [SerializeField] bool isFacingRight = true;
+    public bool canMove;
 
     [Header("Jumping")]
     public float jumpForce;
     public float jumpTime;
     private bool isJumping;
     public bool canJump = true;
-    private bool isFalling;
     private float jumpTimeCounter;
     public float airSpeedMultiplier = 1f;
     public float descentSpeed;
+
+    [Header("Gravity")]
     public float gravityScale = 1.0f;
     public static float globalGravity = -9.81f;
+    public bool canUseGravity;
 
     [Header("Animation")]
     public Animator animator;
@@ -37,6 +41,11 @@ public class PlayerMovController : MonoBehaviour
     [Header("Ground Check")]
     public bool isGrounded;
     public GroundChecker groundChecker;
+
+    [Header("Dash")]
+    public float dashForce;
+    public float dashTime;
+    public bool isDashing;
 
     [Header("Debug")]
     [SerializeField] public Vector2 direction;
@@ -51,9 +60,12 @@ public class PlayerMovController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         playerCapsule = GetComponent<CapsuleCollider>();
+        playerTransform = GetComponent<Transform>();
 
         rb.useGravity = false;
-
+        canMove = true;
+        canUseGravity = true;
+        isDashing = false;
     }
 
 
@@ -72,19 +84,28 @@ public class PlayerMovController : MonoBehaviour
             rb.constraints = RigidbodyConstraints.FreezeAll;
 
         }
+        if(canMove && canJump)
+        {
+            Jump();
+        }
 
-        Jump(); 
         Animation();
         FreezeZAxix();
+        Dash();
     }
 
     private void FixedUpdate()
     {
 
-        Move();
-        
-        Gravity();
-        Descend();
+        if (canMove)
+        {
+            Move();
+        }
+        if (canUseGravity)
+        {
+            Gravity();
+            Descend();
+        }
     }
 
 
@@ -131,11 +152,11 @@ public class PlayerMovController : MonoBehaviour
 
             
 
-            if (!isFacingRight && movement.x > 0f)
+            if (!isFacingRight && movement.x < 0f)
             {
                 Flip();
             }
-            else if (isFacingRight && movement.x < 0f)
+            else if (isFacingRight && movement.x > 0f)
             {
                 Flip();
             }
@@ -146,9 +167,9 @@ public class PlayerMovController : MonoBehaviour
 
     private void FreezeZAxix()
     {
-        if (transform.localPosition.z < 0)
+        if (playerTransform.position.z < 0)
         {
-            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0);
+            playerTransform.position = new Vector3(playerTransform.position.x, playerTransform.position.y, 0);
         }
     }
 
@@ -168,8 +189,6 @@ public class PlayerMovController : MonoBehaviour
         if (UserInput.instance.controls.Player.Jump.WasPressedThisFrame() && (isGrounded || groundChecker.isCoyote))
         {
             isJumping = true;
-
-            
 
             groundChecker.isCoyote = false;
             jumpTimeCounter = jumpTime;
@@ -199,10 +218,7 @@ public class PlayerMovController : MonoBehaviour
 
         if (UserInput.instance.controls.Player.Jump.WasReleasedThisFrame())
         {
-
             isJumping = false;
-            
-            
         }
     }
     #endregion
@@ -265,4 +281,33 @@ public class PlayerMovController : MonoBehaviour
     }
 
     #endregion
+
+    public void Dash()
+    {
+        if (UserInput.instance.controls.Player.Dash.WasPressedThisFrame())
+        {
+            float dashDirection = Mathf.Sign(transform.localScale.x);
+
+            StartCoroutine(DoDash(dashDirection));
+        }
+    }
+
+    IEnumerator DoDash(float direction)
+    {
+        canMove = false;
+        canJump = false;
+        canUseGravity = false;
+        isDashing = true;
+
+        rb.velocity = new Vector2(dashForce * direction, 0f);
+
+        yield return new WaitForSecondsRealtime(dashTime); 
+
+        rb.velocity = Vector3.zero;
+
+        canJump = true;
+        canMove = true;
+        canUseGravity = true;
+        isDashing = false;
+    }
 }

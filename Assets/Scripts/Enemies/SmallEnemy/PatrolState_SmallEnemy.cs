@@ -27,6 +27,9 @@ public class PatrolState_SmallEnemy : LogicMachineBehaviour<SmallEnemyLogicManag
         logicAnimator.SetBool("canLunge", false);
         logicAnimator.SetBool("canRange", false);
         currentPoint = manager.pointA.transform;
+
+
+        manager.spriteAnimator.SetBool("isWalking", true);
     }
     public override void OnUpdate()
     {
@@ -51,7 +54,7 @@ public class PatrolState_SmallEnemy : LogicMachineBehaviour<SmallEnemyLogicManag
 
     public override void OnExit()
     {
-
+        manager.spriteAnimator.SetBool("isWalking", false);
     }
 
     //void Patrol()

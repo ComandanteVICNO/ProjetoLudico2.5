@@ -44,6 +44,9 @@ public class SmallEnemyLogicManager : LogicMachineManager
     public float projectileCooldown;
     public float projectileForce;
 
+    [Header("Sprite Animator")]
+    public Animator spriteAnimator;
+
 
     public override void OnAwake()
     {
@@ -67,6 +70,7 @@ public class SmallEnemyLogicManager : LogicMachineManager
         if(attackPlayerTransform != null )
         {
             directionToPlayer = attackPlayerTransform.position - transform.position;
+            directionToPlayer.Normalize();
             directionToPlayer = new Vector3(directionToPlayer.x, 0, directionToPlayer.z);
         }
 

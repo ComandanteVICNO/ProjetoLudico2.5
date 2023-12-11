@@ -20,6 +20,7 @@ public class ChargeState_SmallEnemy : LogicMachineBehaviour<SmallEnemyLogicManag
     public override void OnEnter()
     {
         logicAnimator.SetBool("canLunge", false);
+        manager.spriteAnimator.SetBool("isCharging", true);
         canCharge = true;
         originalCharge = manager.lungeChargeTime;
         currentCharge = originalCharge;
@@ -40,6 +41,7 @@ public class ChargeState_SmallEnemy : LogicMachineBehaviour<SmallEnemyLogicManag
     public override void OnExit()
     {
         logicAnimator.SetBool("canCharge", false);
+        manager.spriteAnimator.SetBool("isCharging", false);
         cancellationTokenSource?.Cancel();
         cancellationTokenSource?.Dispose();
         canCharge = false;

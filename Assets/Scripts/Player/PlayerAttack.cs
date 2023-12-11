@@ -21,14 +21,8 @@ public class PlayerAttack : MonoBehaviour
     public float knockBackAmount;
 
     [Header("Attack and Animation Cooldown")]
-    public float originalChainCooldown;
-    public float currentChainCooldown;
     public float attackCooldown;
     public float attackChainBreakSpeed;
-    
-    public bool attack1 = false;
-    public bool attack2 = false;
-    public bool attack3 = false;
 
 
     [Header("Attack Checks")]
@@ -38,214 +32,104 @@ public class PlayerAttack : MonoBehaviour
     public LayerMask enemyLayers;
 
     [Header("Animation Clip References")]
-    public AnimationClip attackAnimation1;
-    public AnimationClip attackAnimation2;
-    public AnimationClip attackAnimation3;
+    public AnimationClip normalAttackAnimation;
+    public AnimationClip stunAttackAnimation;
 
     [Header("Animation Clip Durations")]
-    public float attackAnimation1Duration;
-    public float attackAnimation2Duration;
-    public float attackAnimation3Duration;
+    public float normalAttackAnimationTime;
+    public float stunAttackAnimationTime;
+
+    public Coroutine normalAttackCoroutine;
+    public Coroutine stunAttackCoroutine;
 
     private void Start()
     {
-        currentChainCooldown = originalChainCooldown;
-
-        canMove = true;
-        
+        canMove = true;   
         rb = GetComponent<Rigidbody>();
-
-        attackAnimation1Duration = attackAnimation1.length;
-        attackAnimation2Duration = attackAnimation2.length;
-        attackAnimation3Duration = attackAnimation3.length;
-        
+        normalAttackAnimationTime = normalAttackAnimation.length;
+        stunAttackAnimationTime = stunAttackAnimation.length;
     }
 
 
     void Update()
     {
-       
-
-        if (rb.velocity.magnitude > 0.5f)
-        {
-            animator.SetFloat("ResetAttack", 0.1f);
-        }
-        else
-        {
-            animator.SetFloat("ResetAttack", Mathf.Abs(currentChainCooldown));
-        }
 
         //Verify attack input
         if (UserInput.instance.controls.Player.MainAttack.WasPressedThisFrame() && movController.isGrounded && canAttack)
         {
-            AttackChainCheck();
-            attackPerformed = true;
-            canAttack = false;
-            canMove=false;
+            if (normalAttackCoroutine == null)
+            {
+                normalAttackCoroutine = StartCoroutine(DoMainAttack());
+            }
+            
         }
 
         if(UserInput.instance.controls.Player.StunAttack.WasPerformedThisFrame() && movController.isGrounded && canAttack)
         {
-            StunnedAttack();
-
-        }
-
-        //Perform Chain reset countdown
-        if (attackPerformed)
-        {
-            currentChainCooldown -= Time.deltaTime;
-            if (currentChainCooldown <= 0)
+            if(stunAttackCoroutine == null)
             {
-                //if countdown = 0, reset attack values
-                ResetAttack();
+                stunAttackCoroutine = StartCoroutine(DoStunAttack());
             }
-        }
 
-        if (!canAttack)
-        {
-            
-            attackCooldown -= Time.deltaTime;
-            if(attackCooldown <= 0)
-            {
-                canAttack = true;
-                
-            }
-        }
-        
-        if(rb.velocity.magnitude > attackChainBreakSpeed)
-        {
-            attack1 = false;
-            attack2 = false;
-            attack3 = false;
         }
     }
 
-    private void AttackChainCheck()
+
+    public IEnumerator DoMainAttack()
     {
-        
-        //verify which attack chain is current 
-        if (!attack1 && !attack2 && !attack3)
-        {
-            
-            attackCooldown = attackAnimation1Duration;
+        MainAttack();
+        animator.SetBool("NormalAttack", true);
+        attackPerformed = true;
+        canAttack = false;
+        canMove = false;
 
-            attack1 = true;
+        yield return new WaitForSeconds(normalAttackAnimationTime);
 
-            MainAttack();
-            animator.SetTrigger("Attack1");
-
-            CancelInvoke("AllowMove");
-            Invoke("AllowMove", attackCooldown);
-
-
-            attackSound.pitch = 1.5f;
-            attackSound.Play();
-
-            currentChainCooldown = originalChainCooldown;
-        }
-
-        else if (attack1 && !attack2 && !attack3)
-        {
-            
-            attackCooldown = attackAnimation2Duration;
-
-            attack1 = true;
-            attack2 = true;
-
-            CancelInvoke("AllowMove");
-            Invoke("AllowMove", attackCooldown);
-
-            MainAttack();
-            animator.SetTrigger("Attack2");
-
-            attackSound.pitch = 1f;
-            attackSound.Play();
-
-            currentChainCooldown = originalChainCooldown;
-        }
-
-        else if(attack1 && attack2 && !attack3)
-        {
-            attackCooldown = attackAnimation3Duration;
-
-            attack1 = true;
-            attack2 = true;
-            attack3 = true;
-
-            CancelInvoke("AllowMove");
-            Invoke("AllowMove", attackCooldown);
-
-            MainAttack();
-            animator.SetTrigger("Attack3");
-
-            attackSound.pitch = 0.5f;
-            attackSound.Play();
-            
-            currentChainCooldown = originalChainCooldown;
-        }
-        else
-        {
-
-        }
-
-    }
-
-    void ResetAttack()
-    {
-        canAttack = true;
         attackPerformed = false;
-        currentChainCooldown = originalChainCooldown;
-        
-        attack1 = false;
-        attack2 = false;
-        attack3 = false;
-        
+        canAttack = true;
+        canMove = true;
+        animator.SetBool("NormalAttack", false);
+        normalAttackCoroutine = null;
     }
 
-    void AllowMove()
+    public IEnumerator DoStunAttack()
     {
+        StunnedAttack();
+        animator.SetBool("StunAttack", true);
+        attackPerformed = true;
+        canAttack = false;
+        canMove = false;
+
+        yield return new WaitForSeconds(stunAttackAnimationTime);
+
+        attackPerformed = false;
+        canAttack = true;
         canMove = true;
-        
+        animator.SetBool("StunAttack", false);
+        stunAttackCoroutine = null;
     }
 
 
     void MainAttack()
     {
-        if (!attack3)
+        //animator.SetTrigger("Attack");
+
+        Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRange, enemyLayers);
+
+        foreach (Collider enemy in hitEnemies)
         {
-            //animator.SetTrigger("Attack");
-
-            Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRange, enemyLayers);
-
-            foreach (Collider enemy in hitEnemies)
+            if (enemy.GetComponent<EnemyHealth>() != null)
             {
-                if (enemy.GetComponent<EnemyHealth>() != null)
-                {
-                    enemy.GetComponent<EnemyHealth>().TakeDamage(playerDamage); 
-                }
-
-                if (enemy.GetComponent<Fracture>() != null)
-                {
-                    enemy.GetComponent<Fracture>().BreakObject();
-                    Debug.Log("break");
-                }
-
+                enemy.GetComponent<EnemyHealth>().TakeDamage(playerDamage);
             }
-            
-        }
-        else 
-        {
-            //animator.SetTrigger("Attack");
 
-            Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRange, enemyLayers);
-
-            foreach (Collider enemy in hitEnemies)
+            if (enemy.GetComponent<Fracture>() != null)
             {
-                enemy.GetComponent<EnemyHealth>().TakeDamage(playerDamage + playerDamageFinal);
-                
+                enemy.GetComponent<Fracture>().BreakObject();
+                Debug.Log("break");
             }
+
         }
-        
 
     }
 
