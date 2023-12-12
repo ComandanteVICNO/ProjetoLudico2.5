@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProjectileScritp : MonoBehaviour
+public class ProjectileScript : MonoBehaviour
 {
     PlayerHealth playerHealth;
     public float damage;
@@ -29,10 +29,6 @@ public class ProjectileScritp : MonoBehaviour
         {
             Destroy(projectile);
         }
-
-       
-
-
     }
     
 

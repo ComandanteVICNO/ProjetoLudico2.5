@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -11,7 +12,11 @@ public class PlayerHealth : MonoBehaviour
     public SpriteRenderer playerSprite;
     public Color32 damageColor;
     public Color32 originalColor;
-
+    public RectTransform playerHealthBar;
+    public RectTransform playerHealthBackgroundBar;
+    public float barBackgroundWaitTime;
+    public float barBackgroundAnimationTime;
+    float currentBarValue;
 
     void Start()
     {
@@ -25,12 +30,15 @@ public class PlayerHealth : MonoBehaviour
     void Update()
     {
         ChangeColor();
+        UpdateHealth();
+
+        
     }
 
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
-
+        StartCoroutine(UpdateHealth());
         StartCoroutine(ChangeColor());
 
         if (currentHealth <= 0) 
@@ -50,4 +58,26 @@ public class PlayerHealth : MonoBehaviour
 
     }
 
+
+    IEnumerator UpdateHealth()
+    {
+        currentBarValue = (currentHealth * 1) / maxHealth;
+
+        playerHealthBar.localScale = new Vector3(currentBarValue, 1, 1);
+        
+        yield return new WaitForSeconds(barBackgroundWaitTime);
+
+        playerHealthBackgroundBar.DOScale(new Vector3(currentBarValue, 1, 1), barBackgroundAnimationTime).SetEase(Ease.Linear);
+    }
+
+    public void HealthPickup(float health)
+    {
+        currentHealth += health;
+        StartCoroutine(UpdateHealth());
+        
+        if(currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+    }
 }

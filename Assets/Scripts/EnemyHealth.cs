@@ -17,6 +17,7 @@ public class EnemyHealth : MonoBehaviour
     public bool wasAttacked;
     public bool isStunned;
 
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -69,8 +70,6 @@ public class EnemyHealth : MonoBehaviour
         enemySprite.color = originalColor;
 
     }
-
-    
 
 
 }

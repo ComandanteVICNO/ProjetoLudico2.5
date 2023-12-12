@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -16,6 +17,8 @@ public class PlayerAttack : MonoBehaviour
     [Header("Player Damage & Range")]
     public float attackRange = 0.5f;
     public float playerDamage;
+    public float maxEnergy;
+    public float currentEnergy;
     public float playerStunningDamage;
     public float playerDamageFinal;
     public float knockBackAmount;
@@ -39,12 +42,21 @@ public class PlayerAttack : MonoBehaviour
     public float normalAttackAnimationTime;
     public float stunAttackAnimationTime;
 
+    [Header("Energia UI")]
+    public RectTransform playerEnergyBar;
+    public RectTransform playerEnergyBackgroundBar;
+    public float barBackgroundWaitTime;
+    public float barBackgroundAnimationTime;
+    float currentBarValue;
+
+
     public Coroutine normalAttackCoroutine;
     public Coroutine stunAttackCoroutine;
 
     private void Start()
     {
-        canMove = true;   
+        canMove = true;
+        currentEnergy = maxEnergy;
         rb = GetComponent<Rigidbody>();
         normalAttackAnimationTime = normalAttackAnimation.length;
         stunAttackAnimationTime = stunAttackAnimation.length;
@@ -66,11 +78,18 @@ public class PlayerAttack : MonoBehaviour
 
         if(UserInput.instance.controls.Player.StunAttack.WasPerformedThisFrame() && movController.isGrounded && canAttack)
         {
-            if(stunAttackCoroutine == null)
+            float energyNeed = maxEnergy / 3;
+            if (currentEnergy <= energyNeed) return;
+            else
             {
-                stunAttackCoroutine = StartCoroutine(DoStunAttack());
-            }
+                if (stunAttackCoroutine == null)
+                {
+                    stunAttackCoroutine = StartCoroutine(DoStunAttack());
+                    currentEnergy -= energyNeed;
+                    StartCoroutine(UpdateEnergyUI());
 
+                }
+            }
         }
     }
 
@@ -95,6 +114,7 @@ public class PlayerAttack : MonoBehaviour
     public IEnumerator DoStunAttack()
     {
         StunnedAttack();
+        
         animator.SetBool("StunAttack", true);
         attackPerformed = true;
         canAttack = false;
@@ -152,6 +172,17 @@ public class PlayerAttack : MonoBehaviour
             }
 
         }
+    }
+
+    IEnumerator UpdateEnergyUI()
+    {
+        currentBarValue = (currentEnergy * 1) / maxEnergy;
+
+        playerEnergyBar.localScale = new Vector3(currentBarValue, 1, 1);
+
+        yield return new WaitForSecondsRealtime(barBackgroundWaitTime);
+
+        playerEnergyBackgroundBar.DOScale(new Vector3(currentBarValue, 1, 1), barBackgroundAnimationTime).SetEase(Ease.Linear);
     }
 
     private void OnDrawGizmos()

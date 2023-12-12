@@ -68,7 +68,10 @@ public class PlayerMovController : MonoBehaviour
         isDashing = false;
     }
 
-
+    private void Start()
+    {
+        
+    }
 
     private void Update()
     {
@@ -167,10 +170,7 @@ public class PlayerMovController : MonoBehaviour
 
     private void FreezeZAxix()
     {
-        if (playerTransform.position.z < 0)
-        {
-            playerTransform.position = new Vector3(playerTransform.position.x, playerTransform.position.y, 0);
-        }
+            playerTransform.position = new Vector3(playerTransform.position.x, playerTransform.position.y, 0);   
     }
 
     private void Flip()
