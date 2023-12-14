@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
+    public GameObject enemyObject;
     public float maxHealth;
     public float currentHealth;
     public float colorChangeDuration;
@@ -57,7 +58,7 @@ public class EnemyHealth : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            Destroy(gameObject);
+            Destroy(enemyObject);
         }
     }
 

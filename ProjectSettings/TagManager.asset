@@ -19,9 +19,9 @@ TagManager:
   - SmallEnemyProjectile
   - PlayerDetectionBoxes
   - Pickups
-  - 
-  - 
-  - 
+  - PlayerHitboxes
+  - WorldDetectPlayer
+  - EnemyWalls
   - 
   - 
   - 

@@ -15,6 +15,7 @@ public class StunnedState_SmallEnemy : LogicMachineBehaviour<SmallEnemyLogicMana
 
     public override void OnEnter()
     {
+        manager.spriteAnimator.SetBool("isDamaged", true);
         if (manager.enemyHealth.isStunned)
         {
             DoStunnedKnockback(manager.knockbackForce, manager.playerTransform);
@@ -31,7 +32,7 @@ public class StunnedState_SmallEnemy : LogicMachineBehaviour<SmallEnemyLogicMana
 
     public override void OnExit()
     {
-
+        manager.spriteAnimator.SetBool("isDamaged", false);
     }
 
     public async void DoKnockback(float knockbackForce, Transform playerTransform)

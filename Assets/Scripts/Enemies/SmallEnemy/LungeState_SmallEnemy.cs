@@ -48,21 +48,37 @@ public class LungeState_SmallEnemy : LogicMachineBehaviour<SmallEnemyLogicManage
         manager.spriteAnimator.SetBool("isLunging", false);
     }
 
+    //async void LungeAttack()
+    //{
+    //    canLunge = false;
+    //    //manager.rb.AddForce(manager.directionToPlayer * manager.lungeForce, ForceMode.Impulse);
+    //    FindDirectionToPlayer();
+
+    //    manager.rb.AddForce(lungeDirection * manager.lungeForce, ForceMode.Impulse);
+
+    //    var time = manager.lungeDuration;
+
+    //    await Task.Delay(TimeSpan.FromSeconds(time));
+
+    //    if (!active) return;
+    //    StopMovement();
+
+    //    attackPerformed = true;
+    //}
+
     async void LungeAttack()
     {
         canLunge = false;
-        //manager.rb.AddForce(manager.directionToPlayer * manager.lungeForce, ForceMode.Impulse);
-        FindDirectionToPlayer();
-        
+        UseInitialPlayerPosition(); // Use the stored initial player position
         manager.rb.AddForce(lungeDirection * manager.lungeForce, ForceMode.Impulse);
 
         var time = manager.lungeDuration;
-        
+
         await Task.Delay(TimeSpan.FromSeconds(time));
-        
+
         if (!active) return;
         StopMovement();
-        
+
         attackPerformed = true;
     }
 
@@ -71,15 +87,38 @@ public class LungeState_SmallEnemy : LogicMachineBehaviour<SmallEnemyLogicManage
         manager.rb.velocity = Vector3.zero; 
     }
 
-    void FindDirectionToPlayer()
+    //void FindDirectionToPlayer()
+    //{
+    //    if (playerTransform == null) return;
+    //    else
+    //    {
+    //        directionToPlayer = playerTransform.position - transform.position;
+    //    }
+
+    //    Vector3 direction = playerTransform.position - transform.position;
+
+    //    float dotProduct = Vector3.Dot(direction, transform.right);
+
+    //    if (dotProduct > 0)
+    //    {
+    //        // Target is on the right
+    //        lungeDirection = manager.enemyTransform.right;
+    //    }
+    //    else if (dotProduct < 0)
+    //    {
+    //        // Target is on the left
+    //        lungeDirection = - manager.enemyTransform.right;
+    //    }
+    //}
+
+    void UseInitialPlayerPosition()
     {
         if (playerTransform == null) return;
-        else
-        {
-            directionToPlayer = playerTransform.position - transform.position;
-        }
 
-        Vector3 direction = playerTransform.position - transform.position;
+        // Use the stored initial player position for the lunge direction
+        directionToPlayer = manager.initialPlayerPosition - transform.position;
+
+        Vector3 direction = manager.initialPlayerPosition - transform.position;
 
         float dotProduct = Vector3.Dot(direction, transform.right);
 
@@ -91,7 +130,7 @@ public class LungeState_SmallEnemy : LogicMachineBehaviour<SmallEnemyLogicManage
         else if (dotProduct < 0)
         {
             // Target is on the left
-            lungeDirection = - manager.enemyTransform.right;
+            lungeDirection = -manager.enemyTransform.right;
         }
     }
 

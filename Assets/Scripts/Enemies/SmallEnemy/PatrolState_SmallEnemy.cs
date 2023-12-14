@@ -23,13 +23,14 @@ public class PatrolState_SmallEnemy : LogicMachineBehaviour<SmallEnemyLogicManag
     public override void OnEnter()
     {
         waiting = false;
+        manager.spriteAnimator.SetBool("isPatroling", true);
         logicAnimator.SetBool("canCharge", false);
         logicAnimator.SetBool("canLunge", false);
         logicAnimator.SetBool("canRange", false);
         currentPoint = manager.pointA.transform;
 
 
-        manager.spriteAnimator.SetBool("isWalking", true);
+        
     }
     public override void OnUpdate()
     {
@@ -54,7 +55,8 @@ public class PatrolState_SmallEnemy : LogicMachineBehaviour<SmallEnemyLogicManag
 
     public override void OnExit()
     {
-        manager.spriteAnimator.SetBool("isWalking", false);
+        
+        manager.spriteAnimator.SetBool("isPatroling", false);
     }
 
     //void Patrol()

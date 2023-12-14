@@ -11,7 +11,7 @@ public class ChargeState_SmallEnemy : LogicMachineBehaviour<SmallEnemyLogicManag
     float currentCharge;
     bool canCharge;
     private CancellationTokenSource cancellationTokenSource;
-
+    
     public override void OnAwake()
     {
         cancellationTokenSource = new CancellationTokenSource();
@@ -25,6 +25,11 @@ public class ChargeState_SmallEnemy : LogicMachineBehaviour<SmallEnemyLogicManag
         originalCharge = manager.lungeChargeTime;
         currentCharge = originalCharge;
         cancellationTokenSource = new CancellationTokenSource();
+
+        if (manager.attackPlayerTransform != null)
+        {
+            manager.initialPlayerPosition = manager.attackPlayerTransform.position;
+        }
     }
     public override void OnUpdate()
     {

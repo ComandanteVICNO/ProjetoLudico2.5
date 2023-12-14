@@ -15,6 +15,8 @@ public class SmallEnemyLogicManager : LogicMachineManager
     public DetectPlayerHitbox detectPlayerSphere;
     public EnemyHealth enemyHealth;
     public PlayerHealth playerHealth;
+    public Vector3 initialPlayerPosition;
+
 
     [Header("Raycast")]
     public float RaycastDistance;

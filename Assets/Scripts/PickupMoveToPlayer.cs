@@ -33,6 +33,8 @@ public class PickupMoveToPlayer : MonoBehaviour
                 MoveToPlayer(playerPosition);
             }
         }
+
+        moveSpeed += Time.deltaTime;
     }
 
     IEnumerator CanMove()
@@ -47,7 +49,7 @@ public class PickupMoveToPlayer : MonoBehaviour
         transform.position = Vector3.Lerp(transform.position, targetPosition, moveSpeed * Time.deltaTime);
     }
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player")) return;
         else
