@@ -113,7 +113,7 @@ public class LungeState_SmallEnemy : LogicMachineBehaviour<SmallEnemyLogicManage
 
     void UseInitialPlayerPosition()
     {
-        if (playerTransform == null) return;
+        //if (playerTransform == null) return;
 
         // Use the stored initial player position for the lunge direction
         directionToPlayer = manager.initialPlayerPosition - transform.position;

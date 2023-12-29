@@ -15,6 +15,7 @@ public class StunnedState_NormalEnemy : LogicMachineBehaviour<NormalEnemyLogicMa
 
     public override void OnEnter()
     {
+        manager.animator.SetBool("isDamaged", true);
         if (manager.enemyHealth.isStunned)
         {
             DoStunnedKnockback(manager.knockbackForce, manager.playerTransform);
@@ -31,17 +32,11 @@ public class StunnedState_NormalEnemy : LogicMachineBehaviour<NormalEnemyLogicMa
 
     public override void OnExit()
     {
-        
+        manager.animator.SetBool("isDamaged", false);
     }
 
     public async void DoKnockback(float knockbackForce, Transform playerTransform)
     {
-        //Vector3 direction = (transform.position - playerTransform.position).normalized;
-        //manager.rb.AddForce(direction * knockbackForce, ForceMode.Impulse);
-
-        //manager.enemyHealth.wasAttacked = false;
-        //logicAnimator.SetBool("wasAttacked", false);
-
         Vector3 direction = (transform.position - playerTransform.position).normalized;
         manager.rb.AddForce(direction * (knockbackForce * 2), ForceMode.Impulse);
 

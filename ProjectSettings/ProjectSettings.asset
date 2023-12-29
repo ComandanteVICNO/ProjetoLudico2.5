@@ -12,7 +12,7 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: Tuxedo Tatu
+  companyName: Tuxedo Tatus
   productName: 2.5D Ludico Protoripo
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}

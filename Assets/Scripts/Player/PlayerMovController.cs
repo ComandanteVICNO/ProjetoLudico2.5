@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -45,13 +46,24 @@ public class PlayerMovController : MonoBehaviour
     [Header("Dash")]
     public float dashForce;
     public float dashTime;
+    public float dashCooldown;
+    public bool canDash;
     public bool isDashing;
+    Coroutine dashSoundCoroutine;
+    public AudioSource dashAudioSource;
+    public AudioClip dashAudioClip;
+    public RectTransform dashUI;
+    public RectTransform dashUIBackground;
 
     [Header("Debug")]
     [SerializeField] public Vector2 direction;
     [SerializeField] private float action;
 
-
+    [Header("Sound")]
+    public AudioSource stepAudioSource;
+    public float StepSpeed;
+    Coroutine footstepsCoroutine;
+    public AudioClip[] footstepSounds;
 
 
 
@@ -62,10 +74,13 @@ public class PlayerMovController : MonoBehaviour
         playerCapsule = GetComponent<CapsuleCollider>();
         playerTransform = GetComponent<Transform>();
 
+
         rb.useGravity = false;
         canMove = true;
         canUseGravity = true;
         isDashing = false;
+        canDash = true;
+        footstepsCoroutine = null;
     }
 
     private void Start()
@@ -95,6 +110,7 @@ public class PlayerMovController : MonoBehaviour
         Animation();
         FreezeZAxix();
         Dash();
+        FootstepsHandler();
     }
 
     private void FixedUpdate()
@@ -286,9 +302,12 @@ public class PlayerMovController : MonoBehaviour
     {
         if (UserInput.instance.controls.Player.Dash.WasPressedThisFrame())
         {
+            if (!canDash) return;
+
             float dashDirection = Mathf.Sign(transform.localScale.x);
 
             StartCoroutine(DoDash(dashDirection));
+            DashSound();
         }
     }
 
@@ -298,8 +317,12 @@ public class PlayerMovController : MonoBehaviour
         canJump = false;
         canUseGravity = false;
         isDashing = true;
+        canDash = false;
 
         rb.velocity = new Vector2(dashForce * direction, 0f);
+
+        dashUI.localScale = new Vector3(0, 1, 1);
+        dashUIBackground.DOScale(new Vector3(0, 1, 1), dashTime).SetEase(Ease.Linear);
 
         yield return new WaitForSecondsRealtime(dashTime); 
 
@@ -309,5 +332,43 @@ public class PlayerMovController : MonoBehaviour
         canMove = true;
         canUseGravity = true;
         isDashing = false;
+        StartCoroutine(DashCooldown());
     }
+
+    IEnumerator DashCooldown()
+    {
+        dashUIBackground.DOScale(new Vector3(1, 1, 1), dashCooldown).SetEase(Ease.Linear);
+        dashUI.DOScale(new Vector3(1, 1, 1), dashCooldown).SetEase(Ease.Linear);
+        yield return new WaitForSecondsRealtime(dashCooldown);
+        canDash = true;
+    }
+
+    #region Sound
+    //Foot Step Sound
+    private void FootstepsHandler()
+    {
+        if (!isGrounded) return;
+        if (rb.velocity.magnitude < 1f) return;
+        if (footstepsCoroutine != null) return;
+
+        footstepsCoroutine = StartCoroutine(FootstepSound());
+    }
+
+    IEnumerator FootstepSound()
+    {
+        int randomStepSound = UnityEngine.Random.Range(0, footstepSounds.Length);
+        stepAudioSource.PlayOneShot(footstepSounds[randomStepSound]);
+
+        yield return new WaitForSecondsRealtime(StepSpeed);
+        footstepsCoroutine = null;
+    }
+
+    //Dash Sound
+    private void DashSound()
+    {
+        dashAudioSource.PlayOneShot(dashAudioClip);
+    }
+    
+
+    #endregion
 }

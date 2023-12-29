@@ -1,16 +1,22 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
 public class AttackState_NormalEnemy : LogicMachineBehaviour<NormalEnemyLogicManager>
 {
     bool canAttack;
-    bool isAttacking;
-    public float originalAttackCooldown;
-    public float currentAttackCooldownM;
+    public bool isAttacking;
+    public bool isWaitingCooldown;
+
     
+
+
+    public float currentAttackCooldown;
+    float currentTimeUntilAttackHits;
+    float currentTimeUntilAnimationStops;
     public override void OnAwake()
     {
         
@@ -18,10 +24,14 @@ public class AttackState_NormalEnemy : LogicMachineBehaviour<NormalEnemyLogicMan
 
     public override void OnEnter()
     {
-        originalAttackCooldown = manager.attackCooldown;
-        currentAttackCooldownM = originalAttackCooldown;
+        currentTimeUntilAttackHits = manager.timeUntilAttackHits;
+        currentAttackCooldown = manager.animationTime - manager.timeUntilAttackHits;
+        
         canAttack = true;
         isAttacking = false;
+        isWaitingCooldown = false;
+        
+        logicAnimator.SetBool("canChasePlayer", false);
     }
     public override void OnUpdate()
     {
@@ -31,49 +41,75 @@ public class AttackState_NormalEnemy : LogicMachineBehaviour<NormalEnemyLogicMan
             {
                 logicAnimator.SetBool("canAttackPlayer", false);
             }
-            if (manager.chaseHitbox.isPlayerDetected)
-            {
-                logicAnimator.SetBool("canChasePlayer", true);
-            }
+            
+        
         }
-
         if (manager.enemyHealth.wasAttacked)
         {
             logicAnimator.SetBool("wasAttacked", true);
         }
 
         StopMovement();
-        if (canAttack)
+       
+        
+        if(canAttack)
         {
-            DoAttack();
+            Attack();
         }
+        else
+        {
+            AttackCooldown();
+
+        }
+        
         
 
     }
 
     public override void OnExit()
     {
+        
         logicAnimator.SetBool("canAttackPlayer", false);
+        manager.animator.SetBool("isAttacking", false);
     }
 
     
-    void DoAttack()
+    
+    void Attack()
     {
-        if(canAttack)
+        manager.animator.SetBool("isAttacking", true);
+        
+        isAttacking = true;
+        currentTimeUntilAttackHits -= Time.deltaTime;
+        if(currentTimeUntilAttackHits <= 0 && canAttack)
         {
-            isAttacking = true;
-            currentAttackCooldownM -= Time.deltaTime;
-            if(currentAttackCooldownM <= 0)
+            
+            canAttack = false;
+            if (manager.attackHitbox.isPlayerDetected)
             {
-                if (manager.attackHitbox.isPlayerDetected)
-                {
-                    manager.playerHealth.TakeDamage(manager.damageValue);
-                }
-                currentAttackCooldownM = originalAttackCooldown;
-                isAttacking = false;
+                manager.playerHealth.TakeDamage(manager.damageValue);
             }
         }
+        
+        
+
     }
+
+    void AttackCooldown()
+    {
+        currentAttackCooldown -= Time.deltaTime;
+        if(currentAttackCooldown <= 0)
+        {
+            currentTimeUntilAttackHits = manager.timeUntilAttackHits;
+            currentAttackCooldown = manager.animationTime - manager.timeUntilAttackHits;
+            isAttacking = false;
+            canAttack = true;
+            
+            manager.animator.SetBool("isAttacking", false);
+        }
+    }
+
+ 
 
 
     void StopMovement()

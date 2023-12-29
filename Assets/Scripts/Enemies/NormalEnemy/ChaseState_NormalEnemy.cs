@@ -7,7 +7,7 @@ public class ChaseState_NormalEnemy : LogicMachineBehaviour<NormalEnemyLogicMana
 {
 
     Transform playerTransform;
-
+    float currentStepCooldown;
     public enum PlayerDir
     {
         Left,
@@ -24,6 +24,8 @@ public class ChaseState_NormalEnemy : LogicMachineBehaviour<NormalEnemyLogicMana
 
     public override void OnEnter()
     {
+        manager.animator.SetBool("isChasing", true);
+        currentStepCooldown = manager.chaseStepSpeed;
         playerTransform = manager.chaseHitbox.playerTransform;
     }
     public override void OnUpdate()
@@ -45,22 +47,18 @@ public class ChaseState_NormalEnemy : LogicMachineBehaviour<NormalEnemyLogicMana
             logicAnimator.SetBool("wasAttacked", true);
         }
 
+        CheckPlayerDirection();
+        ChasePlayer();
+        ChaseFootSteps();
 
-        //if (IsTransformBetweenPoints(manager.playerTransform, manager.pointA, manager.pointB))
-        if (CheckOutOfBounds())
-        {
-            CheckPlayerDirection();
-            ChasePlayer();
-        }
-        else
-        {
-            manager.rb.velocity = Vector3.zero;
-        }
+
+
     }
 
     public override void OnExit()
     {
         logicAnimator.SetBool("canChasePlayer", false);
+        manager.animator.SetBool("isChasing", false);
     }
 
     private void CheckPlayerDirection()
@@ -97,22 +95,18 @@ public class ChaseState_NormalEnemy : LogicMachineBehaviour<NormalEnemyLogicMana
         }
 
     }
-
-    private bool CheckOutOfBounds()
+    public void ChaseFootSteps()
     {
-        if ((Vector2.Distance(manager.transform.position, manager.pointA.transform.position) < manager.minDistanceToPoint) || (Vector2.Distance(manager.transform.position, manager.pointB.transform.position) < manager.minDistanceToPoint))
+
+        currentStepCooldown -= Time.deltaTime;
+        if (currentStepCooldown < 0)
         {
-            return false;
+
+            int randomFootstepSound = UnityEngine.Random.Range(0, manager.audioSteps.Length);
+            manager.footstepAudioSource.PlayOneShot(manager.audioSteps[randomFootstepSound]);
+            currentStepCooldown = manager.patrolStepSpeed;
         }
-        else { return true; }
-    }
+        else return;
 
-    bool IsTransformBetweenPoints(Transform target, Transform point1, Transform point2)
-    {
-        Vector3 aToB = (point2.position - point1.position).normalized;
-        Vector3 aToTarget = (target.position - point1.position).normalized;
-
-        // Check if the dot product is positive, indicating that the target is between the points
-        return Vector3.Dot(aToB, aToTarget) > 0 && Vector3.Distance(point1.position, target.position) <= Vector3.Distance(point1.position, point2.position);
     }
 }

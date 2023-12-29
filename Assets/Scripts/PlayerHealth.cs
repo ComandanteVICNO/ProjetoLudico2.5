@@ -18,6 +18,11 @@ public class PlayerHealth : MonoBehaviour
     public float barBackgroundAnimationTime;
     float currentBarValue;
 
+    [Header("Sound")]
+    public AudioSource audioSource;
+    public AudioClip hurtSound;
+
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -40,6 +45,8 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= damage;
         StartCoroutine(UpdateHealth());
         StartCoroutine(ChangeColor());
+
+        audioSource.PlayOneShot(hurtSound);
 
         if (currentHealth <= 0) 
         {
@@ -80,4 +87,6 @@ public class PlayerHealth : MonoBehaviour
             currentHealth = maxHealth;
         }
     }
+
+   
 }

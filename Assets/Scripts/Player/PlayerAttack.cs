@@ -138,9 +138,14 @@ public class PlayerAttack : MonoBehaviour
 
         foreach (Collider enemy in hitEnemies)
         {
-            if (enemy.GetComponent<EnemyHealth>() != null)
+            if (enemy.GetComponent<SmallEnemyHealth>() != null)
             {
-                enemy.GetComponent<EnemyHealth>().TakeDamage(playerDamage);
+                enemy.GetComponent<SmallEnemyHealth>().TakeDamage(playerDamage);
+            }
+
+            if (enemy.GetComponent<NormalEnemyHealth>() != null)
+            {
+                enemy.GetComponent<NormalEnemyHealth>().TakeDamage(playerDamage);
             }
 
             if (enemy.GetComponent<Fracture>() != null)
@@ -156,19 +161,24 @@ public class PlayerAttack : MonoBehaviour
     public void StunnedAttack()
     {
         Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRange, enemyLayers);
-        Debug.Log("Did stun attack");
+        
         foreach (Collider enemy in hitEnemies)
         {
-            if (enemy.GetComponent<EnemyHealth>() != null)
+            if (enemy.GetComponent<SmallEnemyHealth>() != null)
             {
-                Debug.Log("enemy was stunned");
-                enemy.GetComponent<EnemyHealth>().TakeStunnedDamage(playerStunningDamage);
+                
+                enemy.GetComponent<SmallEnemyHealth>().TakeStunnedDamage(playerStunningDamage);
+            }
+            if (enemy.GetComponent<NormalEnemyHealth>() != null)
+            {
+                
+                enemy.GetComponent<NormalEnemyHealth>().TakeStunnedDamage(playerStunningDamage);
             }
 
             if (enemy.GetComponent<Fracture>() != null)
             {
                 enemy.GetComponent<Fracture>().BreakObject();
-                Debug.Log("break");
+                
             }
 
         }
@@ -183,6 +193,18 @@ public class PlayerAttack : MonoBehaviour
         yield return new WaitForSecondsRealtime(barBackgroundWaitTime);
 
         playerEnergyBackgroundBar.DOScale(new Vector3(currentBarValue, 1, 1), barBackgroundAnimationTime).SetEase(Ease.Linear);
+    }
+
+    public void EnergyPickup(float energy)
+    {
+        currentEnergy += energy;
+        StartCoroutine(UpdateEnergyUI());
+
+        if(currentEnergy > maxEnergy)
+        {
+            currentEnergy = maxEnergy;
+        }
+
     }
 
     private void OnDrawGizmos()

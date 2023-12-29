@@ -13,7 +13,7 @@ public class SmallEnemyLogicManager : LogicMachineManager
     public Transform enemyTransform;
     public DetectPlayerHitbox detectPlayerHitbox;
     public DetectPlayerHitbox detectPlayerSphere;
-    public EnemyHealth enemyHealth;
+    public SmallEnemyHealth enemyHealth;
     public PlayerHealth playerHealth;
     public Vector3 initialPlayerPosition;
 
@@ -52,7 +52,7 @@ public class SmallEnemyLogicManager : LogicMachineManager
 
     public override void OnAwake()
     {
-        enemyHealth = GetComponent<EnemyHealth>();
+        enemyHealth = GetComponent<SmallEnemyHealth>();
         playerHealth = FindAnyObjectByType<PlayerHealth>();
         playerTransform = playerHealth.transform;
         

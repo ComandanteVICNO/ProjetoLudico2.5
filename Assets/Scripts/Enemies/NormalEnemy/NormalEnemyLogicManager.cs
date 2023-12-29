@@ -14,7 +14,8 @@ public class NormalEnemyLogicManager : LogicMachineManager
     public ChaseDetectPlayer chaseHitbox;
     public AttackDetectPlayer attackHitbox;
     public PlayerHealth playerHealth;
-    public EnemyHealth enemyHealth;
+    public NormalEnemyHealth enemyHealth;
+    public Animator animator;
 
     [Header("Values")]
     public float minWaitTime;
@@ -27,13 +28,28 @@ public class NormalEnemyLogicManager : LogicMachineManager
     public float timeStunned;
     public float timeknockback;
     public float knockbackForce;
-    
+
+    [Header("Attack Timing Values")]
+    public float timeUntilAttackHits;
+    public float animationTime;
+    public float afterAttack;
+
+    [Header("Animation Clip")]
+
+    public AnimationClip attackAnimation;
+
+    [Header("Step Sounds")]
+    public AudioSource footstepAudioSource;
+    public AudioClip[] audioSteps;
+    public float patrolStepSpeed;
+    public float chaseStepSpeed;
+
 
 
     public override void OnAwake()
     {
         playerHealth = FindObjectOfType<PlayerHealth>();
-        enemyHealth = GetComponent<EnemyHealth>();
+        enemyHealth = GetComponent<NormalEnemyHealth>();
         playerMovController = FindObjectOfType<PlayerMovController>();
         playerTransform = playerMovController.transform;
     }
@@ -41,7 +57,8 @@ public class NormalEnemyLogicManager : LogicMachineManager
     // Start is called before the first frame update
     void Start()
     {
-        
+        animationTime = attackAnimation.length;
+        afterAttack = attackAnimation.length - animationTime;
     }
 
     // Update is called once per frame
@@ -51,5 +68,6 @@ public class NormalEnemyLogicManager : LogicMachineManager
         
     }
 
+    
     
 }

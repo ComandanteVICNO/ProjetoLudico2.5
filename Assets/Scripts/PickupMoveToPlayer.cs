@@ -17,6 +17,7 @@ public class PickupMoveToPlayer : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         canMoveToPlayer = false;
         StartCoroutine(CanMove());
+        playerTransform = null;
     }
 
     // Update is called once per frame

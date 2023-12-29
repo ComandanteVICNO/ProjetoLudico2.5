@@ -1,28 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class Teste : MonoBehaviour
+public class Teste : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 {
-    public GameObject enemy1;
-    public GameObject enemy2;
+    public Sprite highlightedSprite;
+    public Sprite normalSprite;
 
-    // Start is called before the first frame update
-    void Start()
+    public Button button;
+    public Image buttonimage;
+
+    private void Start()
     {
-        
+        buttonimage.sprite = normalSprite;
+        buttonimage = GetComponent<Image>();
+        button = GetComponent<Button>();
     }
 
-    // Update is called once per frame
-    void Update()
+
+    public void OnPointerEnter(PointerEventData eventData)
     {
-        if(enemy1 == null && enemy2 == null)
-        {
-            Debug.Log("empty");
-        }
-        else
-        {
-            Debug.Log("They got smth");
-        }
+         buttonimage.sprite = highlightedSprite;
     }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        buttonimage.sprite = normalSprite;
+    }
+
 }
