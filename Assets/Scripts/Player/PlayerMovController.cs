@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovController : MonoBehaviour
 {
+    public static PlayerMovController instance;
+
     public PlayerInput controls;
     private Rigidbody rb;
     private CapsuleCollider playerCapsule;
@@ -85,7 +87,7 @@ public class PlayerMovController : MonoBehaviour
 
     private void Start()
     {
-        
+        instance = this;
     }
 
     private void Update()
@@ -302,6 +304,7 @@ public class PlayerMovController : MonoBehaviour
     {
         if (UserInput.instance.controls.Player.Dash.WasPressedThisFrame())
         {
+            if (PlayerAttack.current.isAttacking) return;
             if (!canDash) return;
 
             float dashDirection = Mathf.Sign(transform.localScale.x);

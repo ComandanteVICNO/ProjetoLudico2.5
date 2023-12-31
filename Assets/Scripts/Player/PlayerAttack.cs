@@ -7,6 +7,8 @@ using UnityEngine.SocialPlatforms;
 
 public class PlayerAttack : MonoBehaviour
 {
+    public static PlayerAttack current;
+
     [Header("References")]
     public Animator animator;
     public PlayerMovController movController;
@@ -29,9 +31,10 @@ public class PlayerAttack : MonoBehaviour
 
 
     [Header("Attack Checks")]
-    public bool attackPerformed = false;
+    public bool isAttacking = false;
     public bool canAttack = true;
     public bool canMove = true;
+    public bool isAttackAllow = true;
     public LayerMask enemyLayers;
 
     [Header("Animation Clip References")]
@@ -55,11 +58,13 @@ public class PlayerAttack : MonoBehaviour
 
     private void Start()
     {
+        current = this;
         canMove = true;
         currentEnergy = maxEnergy;
         rb = GetComponent<Rigidbody>();
         normalAttackAnimationTime = normalAttackAnimation.length;
         stunAttackAnimationTime = stunAttackAnimation.length;
+
     }
 
 
@@ -69,6 +74,7 @@ public class PlayerAttack : MonoBehaviour
         //Verify attack input
         if (UserInput.instance.controls.Player.MainAttack.WasPressedThisFrame() && movController.isGrounded && canAttack)
         {
+            if (!isAttackAllow) return;
             if (normalAttackCoroutine == null)
             {
                 normalAttackCoroutine = StartCoroutine(DoMainAttack());
@@ -78,6 +84,7 @@ public class PlayerAttack : MonoBehaviour
 
         if(UserInput.instance.controls.Player.StunAttack.WasPerformedThisFrame() && movController.isGrounded && canAttack)
         {
+            if (!isAttackAllow) return;
             float energyNeed = maxEnergy / 3;
             if (currentEnergy <= energyNeed) return;
             else
@@ -98,13 +105,13 @@ public class PlayerAttack : MonoBehaviour
     {
         MainAttack();
         animator.SetBool("NormalAttack", true);
-        attackPerformed = true;
+        isAttacking = true;
         canAttack = false;
         canMove = false;
 
         yield return new WaitForSeconds(normalAttackAnimationTime);
 
-        attackPerformed = false;
+        isAttacking = false;
         canAttack = true;
         canMove = true;
         animator.SetBool("NormalAttack", false);
@@ -116,13 +123,13 @@ public class PlayerAttack : MonoBehaviour
         StunnedAttack();
         
         animator.SetBool("StunAttack", true);
-        attackPerformed = true;
+        isAttacking = true;
         canAttack = false;
         canMove = false;
 
         yield return new WaitForSeconds(stunAttackAnimationTime);
 
-        attackPerformed = false;
+        isAttacking = false;
         canAttack = true;
         canMove = true;
         animator.SetBool("StunAttack", false);

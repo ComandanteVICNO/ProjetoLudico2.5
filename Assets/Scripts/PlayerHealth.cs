@@ -42,6 +42,8 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        if (DeathHandler.instance.isDead) return;
+        if(!DeathHandler.instance.canBeAttacked) return;
         currentHealth -= damage;
         StartCoroutine(UpdateHealth());
         StartCoroutine(ChangeColor());
@@ -66,7 +68,7 @@ public class PlayerHealth : MonoBehaviour
     }
 
 
-    IEnumerator UpdateHealth()
+    public IEnumerator UpdateHealth()
     {
         currentBarValue = (currentHealth * 1) / maxHealth;
 

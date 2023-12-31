@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening;
+using Unity.VisualScripting;
 
 public class ChangeSceneArea : MonoBehaviour
 {
@@ -8,6 +11,16 @@ public class ChangeSceneArea : MonoBehaviour
     public PlayerMovController movController;
     public Rigidbody rb;
     public float waitTime;
+  
+
+    public Image transitionImage;
+
+    public GameObject player;
+
+    Color32 blackColor = new Color32(0,0,0,255);
+    Color32 noColor = new Color32(0, 0, 0, 0);
+
+    public float colorFadeTime;
 
     //temporary cause it's still no changing scenes
     public Transform teleportLocation;
@@ -55,10 +68,35 @@ public class ChangeSceneArea : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
         {
+            player = other.gameObject;
             rb = other.GetComponent<Rigidbody>();
             playerTrasform = other.transform;
-            movController = other.GetComponent<PlayerMovController>();
-            StartCoroutine(Teleport());
+            movController = FindAnyObjectByType<PlayerMovController>();
+            StartCoroutine(StartTransition());
         }
+    }
+
+    IEnumerator StartTransition()
+    {
+        CancelMovement();
+
+        
+        transitionImage.DOColor(blackColor, colorFadeTime).SetEase(Ease.Linear); ;
+        
+
+        yield return new WaitForSecondsRealtime(colorFadeTime);
+
+        MovePlayer();
+        StartCoroutine(EndTrasition());
+
+    }
+
+    IEnumerator EndTrasition()
+    {
+        transitionImage.DOColor(noColor, colorFadeTime).SetEase(Ease.Linear);
+
+        yield return new WaitForSecondsRealtime(colorFadeTime);
+
+        AllowMovement();
     }
 }

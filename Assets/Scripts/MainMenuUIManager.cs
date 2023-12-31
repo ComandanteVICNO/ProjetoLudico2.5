@@ -2,52 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 
-public class UIManager : MonoBehaviour
+public class MainMenuUIManager : MonoBehaviour
 {
-    [Header("UI References")]
-    public GameObject pauseMenu;
-    public GameObject healthUI;
-    public GameObject energyUI;
-    public GameObject dialogUI;
-
     [Header("Options References")]
     public Slider masterVolumeSlider;
     public Slider musicSlider;
     public Slider soundFxSlider;
     public AudioMixer gameAudioMixer;
-
-    [Header ("Player Prefs Strings")]
     
+
 
     [Header("Options Values")]
     public float masterVolume;
     public float musicVolume;
     public float soundfxVolume;
 
-    [Header("PostFx")]
-    public FilmGrain filmGrain;
-    public Vignette vignette;
-    public VolumeProfile gameVolume;
+    [Header("PostFX")]
+    public Toggle filmGrainToggle;
+    public Toggle vignetteToggle;
+    bool hasFilmGrain;
+    bool hasVignette;
 
+    Volume volume;
 
-    bool isPaused;
-
-    private void Awake()
-    {
-        SetUiVisibility();
-        GetPostFxFromVolume();
-
-
-    }
+    // Start is called before the first frame update
     void Start()
     {
-        
-        isPaused = false;
         GetVolumePlayerPrefs();
         GetPostFxPlayerPrefs();
     }
@@ -55,16 +39,9 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CheckForPauseButton();
+        
     }
 
-    void SetUiVisibility()
-    {
-        pauseMenu.SetActive(false); 
-        healthUI.SetActive(true);
-        energyUI.SetActive(true);
-    }
-    #region Audio
     void GetVolumePlayerPrefs()
     {
         if (PlayerPrefs.HasKey("MasterVolume"))
@@ -109,24 +86,41 @@ public class UIManager : MonoBehaviour
         PlayerPrefs.SetFloat("FxVolume", (float)sliderValue);
         PlayerPrefs.Save();
     }
-    #endregion
 
-    #region PostFX
+
+
+    public void PlayButton()
+    {
+        SceneManager.LoadScene(1);
+    }
+
+    public void CloseButton()
+    {
+        Application.Quit();
+    }
+
     public void GetPostFxPlayerPrefs()
     {
         //Check for Filmgrain
         if (PlayerPrefs.HasKey("FilmGrainEnabled"))
         {
-
+            
             int filmGrainEnabled = PlayerPrefs.GetInt("FilmGrainEnabled");
-            if (filmGrainEnabled == 0)
+            if(filmGrainEnabled == 0)
             {
-                filmGrain.active = false;
+                hasFilmGrain = false;
+                filmGrainToggle.isOn = false;
             }
-            else if (filmGrainEnabled == 1)
+            else if(filmGrainEnabled == 1)
             {
-                filmGrain.active = true;
+                hasFilmGrain = true;
+                filmGrainToggle.isOn = true;
             }
+        }
+        else
+        {
+            
+            hasFilmGrain = true;
         }
 
         //check for vignette
@@ -136,67 +130,45 @@ public class UIManager : MonoBehaviour
             int vignetteEnabled = PlayerPrefs.GetInt("Vignette");
             if (vignetteEnabled == 0)
             {
-                vignette.active = false;
+                hasVignette = false;
+                vignetteToggle.isOn = false;
             }
             else if (vignetteEnabled == 1)
             {
-                vignette.active = true;
+                hasVignette = true;
+                vignetteToggle.isOn = true;
             }
+        }
+        else
+        {
+
+            hasVignette = true;
         }
     }
 
-    public void GetPostFxFromVolume()
+    public void ToggleFilmGrain(bool active)
     {
-        //filmgrain
-        FilmGrain globalFilmGrain;
-        if (gameVolume.TryGet<FilmGrain>(out globalFilmGrain))
+        if(active == true)
         {
-            filmGrain = globalFilmGrain;
+            PlayerPrefs.SetInt("FilmGrainEnabled", 1);
         }
-        //vignette
-        Vignette globalVignette;
-        if(gameVolume.TryGet<Vignette>(out globalVignette))
+        else if (active == false)
         {
-            vignette = globalVignette;
+            PlayerPrefs.SetInt("FilmGrainEnabled", 0);
         }
-    }
-    #endregion
-    void CheckForPauseButton()
-    {
-        if (UserInput.instance.controls.Player.Pause.WasPressedThisFrame())
-        {
-            if (!isPaused)
-            {
-                isPaused = true;
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-                pauseMenu.SetActive(true);
-                Time.timeScale = 0f;
-            }
-            else
-            {
-                isPaused = false;
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-                pauseMenu.SetActive(false);
-                Time.timeScale = 1f;
-            }
-        }
-    }
-    public void ResumeButton()
-    {
-        isPaused = false;
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-        pauseMenu.SetActive(false);
-        Time.timeScale = 1f;
+        PlayerPrefs.Save();
     }
 
-    public void MainMenuButton()
+    public void ToggleVignette(bool active)
     {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(0);
-        
+        if (active == true)
+        {
+            PlayerPrefs.SetInt("Vignette", 1);
+        }
+        else if (active == false)
+        {
+            PlayerPrefs.SetInt("Vignette", 0);
+        }
+        PlayerPrefs.Save();
     }
-
 }

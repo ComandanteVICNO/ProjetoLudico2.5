@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1564550331459684741}
   - component: {fileID: 4015346184171172361}
   - component: {fileID: 3107239672355570947}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: TeleportZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -123,6 +123,8 @@ MonoBehaviour:
   movController: {fileID: 0}
   rb: {fileID: 0}
   waitTime: 2
+  transitionImage: {fileID: 0}
+  colorFadeTime: 0
   teleportLocation: {fileID: 3786250688532497471}
 --- !u!1 &1910687392433862444
 GameObject:
@@ -133,7 +135,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3786250688532497471}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: TeleportLocation
   m_TagString: Untagged
   m_Icon: {fileID: 0}

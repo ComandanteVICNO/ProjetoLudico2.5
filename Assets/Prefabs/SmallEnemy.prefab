@@ -260,7 +260,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthPickup: {fileID: 4570881955219675289, guid: ff34c0908dc76374ea4c6f35f840331d,
     type: 3}
+  energyPickup: {fileID: 4570881955219675289, guid: f4865d6988cb6c24e890d8a1d293aef2,
+    type: 3}
   launchForce: 10
+  healthSpawnChance: 40
+  energySpawnChance: 20
+  chosenEnergy: Energy
+  chosenHealth: Health
 --- !u!1 &784879545655076362
 GameObject:
   m_ObjectHideFlags: 0
